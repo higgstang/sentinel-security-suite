@@ -2,6 +2,9 @@ node_modules/
 release/
 python-engine/build/
 python-engine/__pycache__/
+python-engine/dist/clamav-mac/database/
+python-engine/dist/clamav-mac/libs/
+python-engine/dist/clamav/
 *.pyc
 *.pyo
 .DS_Store
