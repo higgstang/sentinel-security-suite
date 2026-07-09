@@ -1,5 +1,53 @@
 [
   {
+    "id": 1783636874386,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd, suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/crime_cobaltgang.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/crime_cobaltgang.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd, suspicious_wscript",
+      "severity": "high",
+      "timestamp": "2026-07-09T22:41:14.386037Z",
+      "file_size": 4219,
+      "file_hash": "f0cd03747f75fc1a1e4ceb63dd0767a4b0983c7fbd86dd966a244cf323ed4db7"
+    },
+    "timestamp": "2026-07-09T22:41:14.386176Z",
+    "read": false
+  },
+  {
+    "id": 1783636873930,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_apt29_nobelium_may21.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_apt29_nobelium_may21.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T22:41:13.916646Z",
+      "file_size": 13270,
+      "file_hash": "ef39524be7622a585fd03cd9f21caf8a072036f82c744f67e09eaeda1eb976cf"
+    },
+    "timestamp": "2026-07-09T22:41:13.930160Z",
+    "read": false
+  },
+  {
+    "id": 1783636750733,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/crime_fireball.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/crime_fireball.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T22:39:10.724474Z",
+      "file_size": 8076,
+      "file_hash": "13bca5ff8df2da1aedf361c1fbafaa791a2354e19253b7aa4331c0e2d3a6aa2a"
+    },
+    "timestamp": "2026-07-09T22:39:10.733891Z",
+    "read": false
+  },
+  {
     "id": 1783636433164,
     "type": "malware",
     "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_emissary.yar",

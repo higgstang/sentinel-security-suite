@@ -55,9 +55,9 @@
       "installLocation": "/Applications",
       "isRelocatable": false,
       "isVersionChecked": false,
-      "hasWelcome": false,
-      "hasLicense": false,
-      "hasConclusion": false
+      "allowAnywhere": false,
+      "allowCurrentUserHome": false,
+      "allowRootDirectory": true
     },
     "win": {
       "target": "nsis",
