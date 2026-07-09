@@ -1,5 +1,53 @@
 [
   {
+    "id": 1783641395567,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/expl_cleo_dec24.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/expl_cleo_dec24.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T23:56:35.563496Z",
+      "file_size": 10688,
+      "file_hash": "8b65f821f1a6b875632ee838f461dfbf01faa16d8f4a66b7a52dd7d0b690e1a0"
+    },
+    "timestamp": "2026-07-09T23:56:35.567834Z",
+    "read": false
+  },
+  {
+    "id": 1783641392949,
+    "type": "malware",
+    "message": "Real-time detection: JavaScript eval usage in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_webshells_ext_vars.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_webshells_ext_vars.yar",
+      "threat_type": "suspicious_content",
+      "description": "JavaScript eval usage",
+      "severity": "medium",
+      "timestamp": "2026-07-09T23:56:32.940659Z",
+      "file_size": 4131,
+      "file_hash": "0c9305c3b911161c3649aefcd778f81f1501acfad8ee02bc342e91bcd3fedf1b"
+    },
+    "timestamp": "2026-07-09T23:56:32.949752Z",
+    "read": false
+  },
+  {
+    "id": 1783641316079,
+    "type": "malware",
+    "message": "Real-time detection: Hex-encoded payload in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/susp_vulndriver_hp_hardware_diagnostics_etdsupp_may23.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/susp_vulndriver_hp_hardware_diagnostics_etdsupp_may23.yar",
+      "threat_type": "suspicious_content",
+      "description": "Hex-encoded payload",
+      "severity": "medium",
+      "timestamp": "2026-07-09T23:55:16.067892Z",
+      "file_size": 1118,
+      "file_hash": "b9ed1341bef9e183a95c4497389bc7b7129a87ef815481578552487cd4af9484"
+    },
+    "timestamp": "2026-07-09T23:55:16.079938Z",
+    "read": false
+  },
+  {
     "id": 1783641209152,
     "type": "malware",
     "message": "Real-time detection: YARA match: suspicious_cmd, suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_metasploit_payloads.yar",

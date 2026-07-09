@@ -259,8 +259,15 @@ app.whenReady().then(async () => {
     if (app.isPackaged) {
         autoUpdater.autoDownload = true;
         autoUpdater.autoInstallOnAppQuit = true;
+
+        autoUpdater.on('update-available', (info) => {
+            if (mainWindow) mainWindow.webContents.send('update-available', info);
+        });
+        autoUpdater.on('update-downloaded', (info) => {
+            if (mainWindow) mainWindow.webContents.send('update-downloaded', info);
+        });
+
         autoUpdater.checkForUpdatesAndNotify().catch(() => {});
-        // Re-check every 4 hours
         setInterval(() => autoUpdater.checkForUpdatesAndNotify().catch(() => {}), 4 * 60 * 60 * 1000);
     }
 });

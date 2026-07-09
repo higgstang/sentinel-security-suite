@@ -296,7 +296,7 @@ async function saveBaseline() {
     }
 }
 
-const _ALERT_SOURCE_LABEL = { scanner: 'File Threat', quarantine: 'Quarantined', network: 'Network' };
+const _ALERT_SOURCE_LABEL = { scanner: 'File Threat', quarantine: 'Quarantined', network: 'Network', update: '⬇ App Update' };
 
 let _cachedAlerts = [];
 let _dropdownCloseTimer = null;
@@ -1605,6 +1605,33 @@ async function checkForUpdates() {
     }
 }
 
+function _injectUpdateAlert(info, downloaded) {
+    const version = (info && info.version) ? `v${info.version}` : 'a new version';
+    const alert = {
+        id: 'update-' + Date.now(),
+        source: 'update',
+        severity: 'low',
+        label: downloaded ? `Update ready: ${version}` : `Update available: ${version}`,
+        message: downloaded
+            ? 'Downloaded and ready to install. The update will be applied when you quit Sentinel.'
+            : 'A new version is downloading in the background.',
+        risk: 'None — this is a system update notification.',
+        timestamp: new Date().toISOString(),
+        read: false,
+    };
+    // Prepend to cached alerts so it shows first
+    _cachedAlerts = [alert, ..._cachedAlerts.filter(a => a.source !== 'update')];
+    // Update bell badge
+    const unread = _cachedAlerts.filter(a => !a.read).length;
+    const bellBadge = document.getElementById('bell-badge');
+    if (bellBadge) {
+        bellBadge.textContent = unread;
+        bellBadge.style.display = 'flex';
+    }
+    _renderAlertDropdown();
+    _toast(downloaded ? `✓ Update ${version} ready — installs on quit` : `↓ Update ${version} downloading…`, true, 5000);
+}
+
 // Initialize
 async function _initAll() {
     await initEngine();
@@ -1618,5 +1645,13 @@ async function _initAll() {
     loadIgnoreList();
     setupDropZone();
     lucide.createIcons();
+
+    // Wire up auto-updater notifications → bell dropdown
+    if (window.electronAPI) {
+        if (window.electronAPI.onUpdateAvailable)
+            window.electronAPI.onUpdateAvailable((info) => _injectUpdateAlert(info, false));
+        if (window.electronAPI.onUpdateDownloaded)
+            window.electronAPI.onUpdateDownloaded((info) => _injectUpdateAlert(info, true));
+    }
 }
 _initAll();
