@@ -67,7 +67,15 @@
     "linux": {
       "target": "AppImage",
       "icon": "assets/icon.png"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "higgstang",
+      "repo": "sentinel-security-suite"
     }
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.9"
   },
   "devDependencies": {
     "electron": "^31.7.7",

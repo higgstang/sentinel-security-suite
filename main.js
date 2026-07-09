@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, dialog, Tray, Menu, nativeImage } = require('electron');
+const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const fs = require('fs');
 const { spawn } = require('child_process');
@@ -252,5 +253,14 @@ app.whenReady().then(async () => {
     // Enable launch at login by default for beta testers
     if (!app.getLoginItemSettings().openAtLogin) {
         app.setLoginItemSettings({ openAtLogin: true, openAsHidden: true });
+    }
+
+    // Auto-update: check silently on launch, install on next restart
+    if (app.isPackaged) {
+        autoUpdater.autoDownload = true;
+        autoUpdater.autoInstallOnAppQuit = true;
+        autoUpdater.checkForUpdatesAndNotify().catch(() => {});
+        // Re-check every 4 hours
+        setInterval(() => autoUpdater.checkForUpdatesAndNotify().catch(() => {}), 4 * 60 * 60 * 1000);
     }
 });

@@ -29,14 +29,23 @@ CORS(app)
 # When bundled with PyInstaller, data lives next to the executable.
 if getattr(sys, 'frozen', False):
     base_dir = os.path.dirname(sys.executable)
+    # On macOS/Windows packaged app, write data to user's writable app support dir
+    if sys.platform == 'darwin':
+        _app_support = os.path.expanduser('~/Library/Application Support/sentinel-security-suite')
+    elif sys.platform == 'win32':
+        _app_support = os.path.join(os.environ.get('APPDATA', os.path.expanduser('~')), 'sentinel-security-suite')
+    else:
+        _app_support = os.path.expanduser('~/.sentinel-security-suite')
+    data_dir = _app_support
 else:
     base_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.join(base_dir, "data")
 
-data_dir = os.path.join(base_dir, "data")
 os.makedirs(data_dir, exist_ok=True)
 scanner = SecurityScanner(data_dir=data_dir)
 
-file_scanner = FileScanner(quarantine_dir=os.path.join(base_dir, "quarantine"), base_dir=base_dir)
+_quarantine_dir = os.path.join(data_dir, "quarantine") if getattr(sys, 'frozen', False) else os.path.join(base_dir, "quarantine")
+file_scanner = FileScanner(quarantine_dir=_quarantine_dir, base_dir=base_dir)
 license_client = LicenseClient(base_dir=base_dir)
 realtime_monitor = None
 
