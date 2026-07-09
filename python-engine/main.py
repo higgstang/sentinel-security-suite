@@ -492,6 +492,9 @@ def api_threats_status():
 
 def _require_license():
     """Return a 403 response if the license is not active, otherwise None."""
+    # Beta key activation counts as a valid license
+    if _BETA_KEY and _ADMIN_SERVER_URL:
+        return None
     if not license_client.is_activated():
         return jsonify({"success": False, "error": "License required. Please activate Sentinel."}), 403
     return None
@@ -1074,7 +1077,13 @@ def _feed_update_worker():
 
 @app.route("/api/license/status")
 def api_license_status():
-    return jsonify(license_client.get_status())
+    status = license_client.get_status()
+    # Beta key counts as full activation
+    if _BETA_KEY and _ADMIN_SERVER_URL:
+        status["activated"] = True
+        status["tier"] = status.get("tier") or "beta"
+        status["license_key"] = status.get("license_key") or _BETA_KEY
+    return jsonify(status)
 
 
 @app.route("/api/license/set-key", methods=["POST"])

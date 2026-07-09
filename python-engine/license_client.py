@@ -20,7 +20,8 @@ class LicenseClient:
 
     def __init__(self, base_dir, server_url=None):
         self.base_dir = base_dir
-        self.data_dir = os.path.join(base_dir, "data")
+        # If base_dir is already a writable data dir (packaged app), use it directly
+        self.data_dir = base_dir
         os.makedirs(self.data_dir, exist_ok=True)
         self.license_path = os.path.join(self.data_dir, self.LICENSE_FILE)
         self.server_url = server_url or os.environ.get(
