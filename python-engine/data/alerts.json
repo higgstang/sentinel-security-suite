@@ -1,5 +1,85 @@
 [
   {
+    "id": 1783639779296,
+    "type": "malware",
+    "message": "Real-time detection: JavaScript eval usage in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_apt6_malware.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_apt6_malware.yar",
+      "threat_type": "suspicious_content",
+      "description": "JavaScript eval usage",
+      "severity": "medium",
+      "timestamp": "2026-07-09T23:29:39.288068Z",
+      "file_size": 2179,
+      "file_hash": "bd327eebfe988fa8fdc2f9d02880fac08dc04c6fddada637f08d90f51e1ee8cd"
+    },
+    "timestamp": "2026-07-09T23:29:39.297319Z",
+    "read": false
+  },
+  {
+    "id": 1783639770120,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_wilted_tulip.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_wilted_tulip.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T23:29:30.117985Z",
+      "file_size": 13394,
+      "file_hash": "7e4db5ff36968e94bda0b33099d4a158a4fcc6de9c642bd32cc56f27de7e1bc3"
+    },
+    "timestamp": "2026-07-09T23:29:30.120945Z",
+    "read": false
+  },
+  {
+    "id": 1783639709727,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_cn_pp_zerot.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_cn_pp_zerot.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T23:28:29.720841Z",
+      "file_size": 10626,
+      "file_hash": "063dc2600d8f5b7094672d65c5a4e6cda34727ee072156e62fec7eec73bbdbcb"
+    },
+    "timestamp": "2026-07-09T23:28:29.727687Z",
+    "read": false
+  },
+  {
+    "id": 1783639614074,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_powershell_encoded in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/react_pocs_indicators_dec25.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/react_pocs_indicators_dec25.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_powershell_encoded",
+      "severity": "high",
+      "timestamp": "2026-07-09T23:26:54.074457Z",
+      "file_size": 6046,
+      "file_hash": "eb0e2f789e7b7b45a4c3a45b62f2b12be10c5c15d9ee077ef32eef02b32f0797"
+    },
+    "timestamp": "2026-07-09T23:26:54.074835Z",
+    "read": false
+  },
+  {
+    "id": 1783639613374,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd, suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_freemilk.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_freemilk.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd, suspicious_wscript",
+      "severity": "high",
+      "timestamp": "2026-07-09T23:26:53.367942Z",
+      "file_size": 4533,
+      "file_hash": "ba5818c27a026ff45526714a916f1c64c69875ec92fea7474af96cb49cf9a1b6"
+    },
+    "timestamp": "2026-07-09T23:26:53.375313Z",
+    "read": false
+  },
+  {
     "id": 1783639198947,
     "type": "malware",
     "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_unc2447_sombrat.yar",
