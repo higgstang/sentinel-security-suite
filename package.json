@@ -38,6 +38,10 @@
       {
         "from": "python-engine/dist/clamav",
         "to": "python-engine/clamav"
+      },
+      {
+        "from": "python-engine/dist/clamav-mac",
+        "to": "python-engine/clamav"
       }
     ],
     "mac": {

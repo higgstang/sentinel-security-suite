@@ -1,4 +1,4 @@
-name: Build Windows Installer
+name: Build Installers
 
 on:
   push:
@@ -6,6 +6,87 @@ on:
   workflow_dispatch:
 
 jobs:
+  build-mac:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python engine dependencies
+        run: |
+          pip install pyinstaller
+          pip install -r python-engine/requirements.txt
+
+      - name: Build sentinel-engine (macOS) with PyInstaller
+        run: |
+          pyinstaller \
+            --onefile \
+            --name sentinel-engine \
+            --distpath python-engine/dist \
+            --workpath python-engine/build \
+            --specpath python-engine \
+            --hidden-import flask \
+            --hidden-import flask_cors \
+            --hidden-import psutil \
+            --hidden-import watchdog \
+            --hidden-import watchdog.observers \
+            --hidden-import watchdog.events \
+            --hidden-import yara \
+            --hidden-import requests \
+            python-engine/main.py
+
+      - name: Install and bundle ClamAV for macOS
+        run: |
+          brew install clamav dylibbundler
+          # Update signatures
+          sudo mkdir -p /opt/homebrew/var/lib/clamav
+          sudo freshclam --config-file=/opt/homebrew/etc/clamav/freshclam.conf || true
+          # Copy binary and signatures
+          CLAMDIR="python-engine/dist/clamav-mac"
+          LIBSDIR="$CLAMDIR/libs"
+          mkdir -p "$LIBSDIR" "$CLAMDIR/database"
+          cp /opt/homebrew/bin/clamscan "$CLAMDIR/clamscan"
+          cp /opt/homebrew/var/lib/clamav/*.cvd /opt/homebrew/var/lib/clamav/*.cld "$CLAMDIR/database/" 2>/dev/null || true
+          # Bundle all dylibs
+          dylibbundler -od -b \
+            -x "$CLAMDIR/clamscan" \
+            -d "$LIBSDIR/" \
+            -p @executable_path/libs/ \
+            -s /opt/homebrew/lib \
+            -s /opt/homebrew/opt/openssl@3/lib \
+            -s /opt/homebrew/opt/json-c/lib \
+            -s /opt/homebrew/opt/pcre2/lib \
+            -s /opt/homebrew/Cellar/clamav/$(brew list --versions clamav | awk '{print $2}')/lib
+          # Ad-hoc sign
+          codesign --force --sign - "$CLAMDIR/clamscan"
+          for f in "$LIBSDIR"/*.dylib; do codesign --force --sign - "$f"; done
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Node dependencies
+        run: npm install
+
+      - name: Build macOS DMG
+        run: npm run build-mac
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload DMG artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sentinel-Mac-Installer
+          path: release/*.dmg
+          retention-days: 30
+
   build-windows:
     runs-on: windows-latest
 

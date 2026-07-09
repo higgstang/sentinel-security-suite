@@ -1,5 +1,197 @@
 [
   {
+    "id": 1783632214184,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_susp_lnk_files.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_susp_lnk_files.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_wscript",
+      "severity": "high",
+      "timestamp": "2026-07-09T21:23:34.181631Z",
+      "file_size": 2344,
+      "file_hash": "1ac2357774fe5bfaad5085e2383ae40348c1e860c846bde686696cbfca6cfbe2"
+    },
+    "timestamp": "2026-07-09T21:23:34.184975Z",
+    "read": false
+  },
+  {
+    "id": 1783632213613,
+    "type": "malware",
+    "message": "Real-time detection: JavaScript eval usage in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/expl_proxyshell.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/expl_proxyshell.yar",
+      "threat_type": "suspicious_content",
+      "description": "JavaScript eval usage",
+      "severity": "medium",
+      "timestamp": "2026-07-09T21:23:33.607859Z",
+      "file_size": 11595,
+      "file_hash": "b6c0a05e053e6fdedbff3e03c02fae0cc2d5bd73d262cbfe822861f30f0ff8be"
+    },
+    "timestamp": "2026-07-09T21:23:33.613822Z",
+    "read": false
+  },
+  {
+    "id": 1783632103938,
+    "type": "malware",
+    "message": "Real-time detection: Embedded script tag in /Users/higgs/Library/Caches/Firefox/Profiles/6govlb8b.default-release/cache2/entries/D0F48A0632B6C451791F4257697E861961F06A6F",
+    "device": {
+      "path": "/Users/higgs/Library/Caches/Firefox/Profiles/6govlb8b.default-release/cache2/entries/D0F48A0632B6C451791F4257697E861961F06A6F",
+      "threat_type": "suspicious_content",
+      "description": "Embedded script tag",
+      "severity": "medium",
+      "timestamp": "2026-07-09T21:21:43.900501Z",
+      "file_size": 1115714,
+      "file_hash": "9f1c911ede25e8faf2be4802df669b3e690271e8ac97c1d9aa8989d611c4c3e6"
+    },
+    "timestamp": "2026-07-09T21:21:43.938894Z",
+    "read": false
+  },
+  {
+    "id": 1783632090306,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd, suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/cn_pentestset_webshells.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/cn_pentestset_webshells.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd, suspicious_wscript",
+      "severity": "high",
+      "timestamp": "2026-07-09T21:21:30.306530Z",
+      "file_size": 52220,
+      "file_hash": "a7bf6e7b31636833a8388fe7ad65a2a895ab7b16148ce33866c31f48e3dd1e88"
+    },
+    "timestamp": "2026-07-09T21:21:30.306711Z",
+    "read": false
+  },
+  {
+    "id": 1783632089632,
+    "type": "malware",
+    "message": "Real-time detection: Embedded script tag in /Users/higgs/Library/Caches/Firefox/Profiles/6govlb8b.default-release/cache2/entries/D0F48A0632B6C451791F4257697E861961F06A6F",
+    "device": {
+      "path": "/Users/higgs/Library/Caches/Firefox/Profiles/6govlb8b.default-release/cache2/entries/D0F48A0632B6C451791F4257697E861961F06A6F",
+      "threat_type": "suspicious_content",
+      "description": "Embedded script tag",
+      "severity": "medium",
+      "timestamp": "2026-07-09T21:21:29.589813Z",
+      "file_size": 1115714,
+      "file_hash": "9f1c911ede25e8faf2be4802df669b3e690271e8ac97c1d9aa8989d611c4c3e6"
+    },
+    "timestamp": "2026-07-09T21:21:29.633457Z",
+    "read": false
+  },
+  {
+    "id": 1783632089363,
+    "type": "malware",
+    "message": "Real-time detection: Process memory allocation in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_excel_xll_addin_suspicious.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_excel_xll_addin_suspicious.yar",
+      "threat_type": "suspicious_content",
+      "description": "Process memory allocation",
+      "severity": "medium",
+      "timestamp": "2026-07-09T21:21:29.361633Z",
+      "file_size": 3473,
+      "file_hash": "b23d78c3b7ce6a7f90796b0e0761893e8933823d6a7b7308a724e2cbc76f2079"
+    },
+    "timestamp": "2026-07-09T21:21:29.363613Z",
+    "read": false
+  },
+  {
+    "id": 1783632056388,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_tick_weaponized_usb.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_tick_weaponized_usb.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T21:20:56.388389Z",
+      "file_size": 2663,
+      "file_hash": "6db6f0ad4cd276ee714effcacc97291225ed0115ecce9249a936737e67b5b346"
+    },
+    "timestamp": "2026-07-09T21:20:56.388506Z",
+    "read": false
+  },
+  {
+    "id": 1783632055953,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_khrat.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_khrat.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_wscript",
+      "severity": "high",
+      "timestamp": "2026-07-09T21:20:55.953524Z",
+      "file_size": 3035,
+      "file_hash": "1a75bfa1559f542e14aae79b9ab55a7370fd346e01dc1eb787a43e6e2e3af370"
+    },
+    "timestamp": "2026-07-09T21:20:55.953683Z",
+    "read": false
+  },
+  {
+    "id": 1783632055431,
+    "type": "malware",
+    "message": "Real-time detection: Process memory allocation in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/threat_compromised_daemon_tools_lite_may26.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/threat_compromised_daemon_tools_lite_may26.yar",
+      "threat_type": "suspicious_content",
+      "description": "Process memory allocation",
+      "severity": "medium",
+      "timestamp": "2026-07-09T21:20:55.429484Z",
+      "file_size": 4453,
+      "file_hash": "e93b43f3fcfa144e9a327d33aefd405d80c93c378e5440fd42c813a9a58f683a"
+    },
+    "timestamp": "2026-07-09T21:20:55.431042Z",
+    "read": false
+  },
+  {
+    "id": 1783631985408,
+    "type": "malware",
+    "message": "Real-time detection: JavaScript eval usage in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/expl_proxyshell.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/expl_proxyshell.yar",
+      "threat_type": "suspicious_content",
+      "description": "JavaScript eval usage",
+      "severity": "medium",
+      "timestamp": "2026-07-09T21:19:45.406073Z",
+      "file_size": 11595,
+      "file_hash": "b6c0a05e053e6fdedbff3e03c02fae0cc2d5bd73d262cbfe822861f30f0ff8be"
+    },
+    "timestamp": "2026-07-09T21:19:45.408752Z",
+    "read": false
+  },
+  {
+    "id": 1783631910997,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_bluetermite_emdivi.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_bluetermite_emdivi.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T21:18:30.996808Z",
+      "file_size": 5547,
+      "file_hash": "71e9b60903c6e6d3702b9d008e27342885571ee0a881af048b0108b7483b6c87"
+    },
+    "timestamp": "2026-07-09T21:18:30.997888Z",
+    "read": false
+  },
+  {
+    "id": 1783631890933,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_gcti_cobaltstrike.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_gcti_cobaltstrike.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_wscript",
+      "severity": "high",
+      "timestamp": "2026-07-09T21:18:10.932958Z",
+      "file_size": 161039,
+      "file_hash": "0f23b573e80b46b14a237a9fd13d4dfb72c1dfacc4fad1d0b02fa505ec6aa26c"
+    },
+    "timestamp": "2026-07-09T21:18:10.933320Z",
+    "read": false
+  },
+  {
     "id": 1783631827585,
     "type": "malware",
     "message": "Real-time detection: YARA match: suspicious_cmd, suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_metasploit_payloads.yar",
