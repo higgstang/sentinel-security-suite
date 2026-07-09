@@ -15,6 +15,7 @@ Initial private beta release.
 - Unified download page with OS auto-detection
 
 ### Fixes
+- **Scan error / failed to fetch (macOS)** — all writable directories (yara_rules, quarantine, CISA cache) now routed to `~/Library/Application Support/sentinel-security-suite` instead of read-only `.app` bundle
 - **Engine crash on macOS** — data directory now written to `~/Library/Application Support/sentinel-security-suite` instead of read-only `.app` bundle (fixes "scan error: failed to fetch")
 - **Window not loading after install** — fixed engine working directory for packaged app
 - **App shows as damaged on macOS** — PKG installer now includes postinstall script to re-sign app ad-hoc

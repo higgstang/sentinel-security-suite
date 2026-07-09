@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "id": 1783640198119,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_ps_empire_eval.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_ps_empire_eval.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T23:36:38.114028Z",
+      "file_size": 1496,
+      "file_hash": "edeec2460b6da457d55192c00a0cc904531f868f26c38b36b75cadf0b2ace73a"
+    },
+    "timestamp": "2026-07-09T23:36:38.119645Z",
+    "read": false
+  }
+]
