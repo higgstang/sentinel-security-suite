@@ -1,0 +1,63 @@
+name: Build Windows Installer
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python engine dependencies
+        run: |
+          pip install pyinstaller
+          pip install -r python-engine/requirements.txt
+
+      - name: Build sentinel-engine.exe with PyInstaller
+        run: |
+          pyinstaller `
+            --onefile `
+            --name sentinel-engine `
+            --distpath python-engine/dist `
+            --workpath python-engine/build `
+            --specpath python-engine `
+            --hidden-import flask `
+            --hidden-import flask_cors `
+            --hidden-import psutil `
+            --hidden-import watchdog `
+            --hidden-import watchdog.observers `
+            --hidden-import watchdog.events `
+            --hidden-import yara `
+            --hidden-import requests `
+            python-engine/main.py
+        shell: pwsh
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Node dependencies
+        run: npm install
+
+      - name: Build Windows Electron installer
+        run: npm run build-win
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sentinel-Windows-Installer
+          path: release/*.exe
+          retention-days: 30

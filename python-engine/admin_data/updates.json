@@ -1,0 +1,7 @@
+{
+  "latest_version": "1.0.1",
+  "release_notes": "\u2022 Fix A\n\u2022 Fix B",
+  "download_url": "https://example.com/dl",
+  "required": false,
+  "published_at": "2026-07-09T18:19:45.998461+00:00"
+}

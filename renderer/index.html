@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentinel Security Suite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i data-lucide="shield" class="w-5 h-5 text-white"></i>
+            </div>
+            <nav class="sidebar-nav">
+                <button onclick="showView('dashboard')" id="nav-dashboard" class="sidebar-item active" title="Dashboard">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                </button>
+                <button onclick="showView('network')" id="nav-network" class="sidebar-item" title="Network Scan">
+                    <i data-lucide="radar" class="w-5 h-5"></i>
+                </button>
+                <button onclick="showView('threats')" id="nav-threats" class="sidebar-item" title="Threats">
+                    <i data-lucide="shield-alert" class="w-5 h-5"></i>
+                    <span id="threat-badge" class="sidebar-badge hidden">0</span>
+                </button>
+                <button onclick="showView('vulns')" id="nav-vulns" class="sidebar-item" title="Vulnerabilities">
+                    <i data-lucide="bug" class="w-5 h-5"></i>
+                </button>
+                <button onclick="showView('scanner')" id="nav-scanner" class="sidebar-item" title="File Scanner">
+                    <i data-lucide="file-search" class="w-5 h-5"></i>
+                </button>
+                <button onclick="showView('quarantine')" id="nav-quarantine" class="sidebar-item" title="Quarantine">
+                    <i data-lucide="archive" class="w-5 h-5"></i>
+                    <span id="quarantine-badge" class="sidebar-badge hidden">0</span>
+                </button>
+                <button onclick="showView('scans')" id="nav-scans" class="sidebar-item" title="Scans">
+                    <i data-lucide="scan-line" class="w-5 h-5"></i>
+                </button>
+                <button onclick="showView('license')" id="nav-license" class="sidebar-item" title="License">
+                    <i data-lucide="key" class="w-5 h-5"></i>
+                </button>
+                <button onclick="showView('settings')" id="nav-settings" class="sidebar-item" title="Settings">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                </button>
+                <button onclick="showView('feedback')" id="nav-feedback" class="sidebar-item" title="Send Feedback">
+                    <i data-lucide="message-square" class="w-5 h-5"></i>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main -->
+        <main class="main">
+            <!-- Top bar -->
+            <header class="top-bar">
+                <div class="top-bar-left">
+                    <h2 id="page-title" class="top-bar-title">Dashboard</h2>
+                    <div class="top-bar-search" style="opacity:0.4;cursor:not-allowed" title="Search — coming soon">
+                        <input type="text" placeholder="Search — coming soon" disabled style="cursor:not-allowed">
+                        <i data-lucide="search" class="w-4 h-4"></i>
+                    </div>
+                </div>
+                <div class="top-bar-right">
+                    <div class="status-pill">All systems protected</div>
+                    <div class="relative" id="bell-wrapper" onmouseenter="openAlertDropdown()" onmouseleave="closeAlertDropdown()">
+                        <button class="relative p-2 rounded-lg hover:bg-[#1c1c21] text-[#a1a1aa] transition">
+                            <i data-lucide="bell" class="w-5 h-5"></i>
+                            <span id="bell-badge" style="display:none;background:#ef4444;position:absolute;top:-4px;right:-4px;width:16px;height:16px;border-radius:9999px;font-size:9px;font-weight:700;color:#fff;align-items:center;justify-content:center;text-align:center;line-height:16px">0</span>
+                        </button>
+                        <!-- Alert Dropdown -->
+                        <div id="alert-dropdown" style="display:none;position:absolute;right:0;top:100%;margin-top:6px;width:380px;max-height:480px;overflow-y:auto;background:#111113;border:1px solid #27272a;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.6);z-index:1000">
+                            <div style="padding:12px 16px;border-bottom:1px solid #27272a;display:flex;align-items:center;justify-content:space-between">
+                                <span style="font-size:13px;font-weight:600;color:#fff">Alerts</span>
+                                <div style="display:flex;gap:10px;align-items:center">
+                                    <button onclick="clearAllAlerts()" style="font-size:11px;color:#71717a;background:none;border:none;cursor:pointer;padding:0" title="Clear all alerts">Clear all</button>
+                                    <button onclick="showView('threats')" style="font-size:11px;color:#3b82f6;background:none;border:none;cursor:pointer;padding:0">View all</button>
+                                </div>
+                            </div>
+                            <div id="alert-dropdown-list" style="padding:8px">
+                                <p style="font-size:12px;color:#71717a;padding:8px">Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="p-2 rounded-lg hover:bg-[#1c1c21] text-[#a1a1aa] transition">
+                        <i data-lucide="user" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Views -->
+            <div class="content-area" id="content-area">
+                <!-- Dashboard -->
+                <div id="view-dashboard" class="view space-y-6">
+                    <div>
+                        <h2 class="section-title">Overview</h2>
+                        <p class="section-subtitle">Real-time security posture and activity</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                        <div class="metric-card">
+                            <p class="metric-label">Threats Detected</p>
+                            <p class="metric-value" id="dash-threats">0</p>
+                            <p class="metric-change text-success">Active monitoring</p>
+                        </div>
+                        <div class="metric-card">
+                            <p class="metric-label">Network Devices</p>
+                            <p class="metric-value" id="dash-devices">0</p>
+                            <p class="metric-change text-muted">Discovered on last scan</p>
+                        </div>
+                        <div class="metric-card">
+                            <p class="metric-label">Last Scan</p>
+                            <p class="metric-value text-lg pt-2" id="dash-last-scan">Never</p>
+                            <p class="metric-change text-muted">Network discovery</p>
+                        </div>
+                        <div class="metric-card flex flex-col items-center justify-center" style="min-height:110px;cursor:pointer;transition:.15s" onclick="toggleRealtime()" title="Click to toggle real-time protection" onmouseenter="this.style.borderColor='rgba(99,102,241,0.4)'" onmouseleave="this.style.borderColor=''">
+                            <div id="protection-globe-wrap" class="globe-wrap globe-active">
+                                <div class="globe-ring"></div>
+                                <i data-lucide="globe" class="globe-icon" id="protection-globe-icon"></i>
+                            </div>
+                            <p class="metric-label mt-3" id="protection-status-label">Protected</p>
+                            <p class="metric-change text-success" id="protection-status-sub">Real-time monitoring on</p>
+                            <p style="font-size:10px;color:#52525b;margin-top:4px">Click to toggle</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                        <div class="glass-card p-6 lg:col-span-2">
+                            <h3 class="text-base font-semibold text-white mb-6">System Health</h3>
+                            <div class="space-y-5">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-2">
+                                        <span class="text-[#a1a1aa]">CPU Usage</span>
+                                        <span class="text-white font-semibold" id="dash-cpu">--%</span>
+                                    </div>
+                                    <div class="h-2 bg-[#27272a] rounded-full overflow-hidden">
+                                        <div id="dash-cpu-bar" class="h-full bg-[#ef4444] rounded-full transition-all" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-2">
+                                        <span class="text-[#a1a1aa]">Memory Usage</span>
+                                        <span class="text-white font-semibold" id="dash-memory">--%</span>
+                                    </div>
+                                    <div class="h-2 bg-[#27272a] rounded-full overflow-hidden">
+                                        <div id="dash-memory-bar" class="h-full bg-[#3b82f6] rounded-full transition-all" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-2">
+                                        <span class="text-[#a1a1aa]">Disk Usage</span>
+                                        <span class="text-white font-semibold" id="dash-disk">--%</span>
+                                    </div>
+                                    <div class="h-2 bg-[#27272a] rounded-full overflow-hidden">
+                                        <div id="dash-disk-bar" class="h-full bg-[#f59e0b] rounded-full transition-all" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-6 flex flex-col items-center justify-center">
+                            <p class="text-sm font-semibold text-[#a1a1aa] mb-4 uppercase tracking-wider">Security Score</p>
+                            <div class="score-ring">
+                                <span id="security-score">--</span>
+                            </div>
+                            <p class="text-xs text-[#71717a] mt-4 text-center">Score based on active protection and recent detections</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                        <div class="glass-card p-6 lg:col-span-2">
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <h3 class="text-base font-semibold text-white">Recent Detections</h3>
+                                    <p class="text-xs text-[#a1a1aa] mt-1">Latest alerts and suspicious activity</p>
+                                </div>
+                                <button onclick="loadAlerts()" class="btn btn-secondary">
+                                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                                    Refresh
+                                </button>
+                            </div>
+                            <div id="alerts-list" class="space-y-2">
+                                <p class="text-sm text-[#71717a]">No alerts yet. Run a scan and save a baseline to detect changes.</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-6">
+                            <h3 class="text-base font-semibold text-white mb-4">Activity Feed</h3>
+                            <div class="space-y-0">
+                                <div class="activity-item">
+                                    <div class="activity-dot bg-[#22c55e]"></div>
+                                    <div class="activity-content">
+                                        <p class="activity-title">Engine started</p>
+                                        <p class="activity-meta">Protection active · Just now</p>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-dot bg-[#3b82f6]"></div>
+                                    <div class="activity-content">
+                                        <p class="activity-title">Threat feeds updated</p>
+                                        <p class="activity-meta">CISA KEV, URLhaus, ThreatFox</p>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-dot bg-[#71717a]"></div>
+                                    <div class="activity-content">
+                                        <p class="activity-title">System baseline saved</p>
+                                        <p class="activity-meta">Network baseline captured</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-base font-semibold text-white">Protection Modules</h3>
+                                <p class="text-xs text-[#a1a1aa] mt-1">Select a module to configure</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                            <div class="module-card p-5" onclick="showView('scanner')">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="p-2.5 bg-pastel-purple rounded-lg">
+                                        <i data-lucide="shield" class="w-5 h-5 pastel-purple"></i>
+                                    </div>
+                                    <span class="badge badge-clean">Active</span>
+                                </div>
+                                <h4 class="text-sm font-semibold text-white mb-1">Next-Gen Antivirus</h4>
+                                <p class="text-xs text-[#a1a1aa]">Malware, ransomware, and file-based threat protection.</p>
+                            </div>
+                            <div class="module-card p-5" onclick="showView('network')">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="p-2.5 bg-pastel-blue rounded-lg">
+                                        <i data-lucide="crosshair" class="w-5 h-5 pastel-blue"></i>
+                                    </div>
+                                    <span class="badge badge-clean">Active</span>
+                                </div>
+                                <h4 class="text-sm font-semibold text-white mb-1">Endpoint Detection & Response</h4>
+                                <p class="text-xs text-[#a1a1aa]">Network monitoring and threat detection.</p>
+                            </div>
+                            <div class="module-card p-5" style="opacity:0.4;cursor:not-allowed;pointer-events:none">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="p-2.5 bg-pastel-orange rounded-lg">
+                                        <i data-lucide="usb" class="w-5 h-5 pastel-orange"></i>
+                                    </div>
+                                    <span class="badge badge-medium">Coming soon</span>
+                                </div>
+                                <h4 class="text-sm font-semibold text-white mb-1">Device Control</h4>
+                                <p class="text-xs text-[#a1a1aa]">USB and peripheral device management.</p>
+                            </div>
+                            <div class="module-card p-5" style="opacity:0.4;cursor:not-allowed;pointer-events:none">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="p-2.5 bg-pastel-pink rounded-lg">
+                                        <i data-lucide="smartphone" class="w-5 h-5 pastel-pink"></i>
+                                    </div>
+                                    <span class="badge badge-medium">Coming soon</span>
+                                </div>
+                                <h4 class="text-sm font-semibold text-white mb-1">Mobile Protection</h4>
+                                <p class="text-xs text-[#a1a1aa]">Mobile endpoints and BYOD visibility.</p>
+                            </div>
+                            <div class="module-card p-5" style="opacity:0.4;cursor:not-allowed;pointer-events:none">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="p-2.5 bg-pastel-green rounded-lg">
+                                        <i data-lucide="network" class="w-5 h-5 pastel-green"></i>
+                                    </div>
+                                    <span class="badge badge-medium">Coming soon</span>
+                                </div>
+                                <h4 class="text-sm font-semibold text-white mb-1">Firewall Management</h4>
+                                <p class="text-xs text-[#a1a1aa]">Host firewall policy and traffic control.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Network Scan -->
+                <div id="view-network" class="view hidden space-y-5">
+                    <div>
+                        <h2 class="section-title">Network Discovery</h2>
+                        <p class="section-subtitle">Scan your local network for connected devices</p>
+                    </div>
+                    <div class="glass-card p-6">
+                        <div class="flex flex-wrap items-end gap-4 mb-4">
+                            <div class="w-full md:w-64">
+                                <label class="block text-xs text-[#a1a1aa] mb-1">Subnet</label>
+                                <input id="scan-subnet" type="text" class="w-full" placeholder="10.0.0.0/24">
+                            </div>
+                            <div class="flex items-center gap-2 pb-2.5">
+                                <input id="full-scan" type="checkbox" class="w-4 h-4 rounded border-[#27272a] bg-[#16161a] text-[#ef4444] focus:ring-[#ef4444]">
+                                <label for="full-scan" class="text-sm text-[#a1a1aa]">Full port scan</label>
+                            </div>
+                            <button onclick="runScan()" id="scan-btn" class="btn btn-primary">
+                                <i data-lucide="play" class="w-4 h-4"></i>
+                                Start Scan
+                            </button>
+                            <button onclick="saveBaseline()" id="baseline-btn" class="btn btn-secondary">
+                                <i data-lucide="save" class="w-4 h-4"></i>
+                                Save Baseline
+                            </button>
+                        </div>
+                        <p class="text-sm text-[#71717a]" id="network-subnet">Subnet: --</p>
+                        <div id="scan-status" class="mt-4 hidden"></div>
+                    </div>
+
+                    <div class="glass-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-base font-semibold text-white">Discovered Devices</h3>
+                            <span class="text-sm text-[#a1a1aa]" id="device-count">0 devices</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>IP Address</th>
+                                        <th>Hostname</th>
+                                        <th>Vendor</th>
+                                        <th>Open Ports</th>
+                                        <th>First Seen</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="devices-table" class="text-[#a1a1aa]"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Threats -->
+                <div id="view-threats" class="view hidden space-y-5">
+                    <div>
+                        <h2 class="section-title">Security Alerts</h2>
+                        <p class="section-subtitle">New devices and changes detected since baseline</p>
+                    </div>
+                    <div class="glass-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-base font-semibold text-white">Alerts</h3>
+                            <button onclick="loadAlerts()" class="btn btn-secondary">
+                                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                                Refresh
+                            </button>
+                        </div>
+                        <div id="alerts-list" class="space-y-2">
+                            <p class="text-sm text-[#71717a]">No alerts yet.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- File Scanner -->
+                <div id="view-scanner" class="view hidden space-y-5">
+                    <div>
+                        <h2 class="section-title">Malware Scanner</h2>
+                        <p class="section-subtitle">Scan files and directories for malware and suspicious content</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                        <div class="glass-card p-6 lg:col-span-2 space-y-5">
+
+                            <!-- Scan type buttons -->
+                            <div class="grid grid-cols-3 gap-3">
+                                <button onclick="runFullScan('quick')" id="quick-scan-btn" class="btn btn-secondary flex-col items-center py-4 gap-1 border-emerald-500/30 hover:border-emerald-500/60">
+                                    <i data-lucide="zap" class="w-5 h-5 text-emerald-400"></i>
+                                    <span class="text-sm font-bold">Quick Scan</span>
+                                    <span class="text-xs font-normal opacity-70">Hash check only, fastest</span>
+                                </button>
+                                <button onclick="runFullScan('full')" id="full-scan-btn" class="btn btn-primary flex-col items-center py-4 gap-1">
+                                    <i data-lucide="shield-check" class="w-5 h-5"></i>
+                                    <span class="text-sm font-bold">Full Scan</span>
+                                    <span class="text-xs font-normal opacity-70">All engines, recommended</span>
+                                </button>
+                                <button onclick="runFullScan('deep')" id="deep-scan-btn" class="btn btn-secondary flex-col items-center py-4 gap-1 border-purple-500/30 hover:border-purple-500/60">
+                                    <i data-lucide="scan-search" class="w-5 h-5 text-purple-400"></i>
+                                    <span class="text-sm font-bold">Deep Scan</span>
+                                    <span class="text-xs font-normal opacity-70">Binary &amp; entropy analysis</span>
+                                </button>
+                            </div>
+
+                            <!-- Status and progress — shown here, right after buttons -->
+                            <div id="scanner-status" class="hidden"></div>
+
+                            <div id="scan-progress-panel" class="hidden">
+                                <div class="rounded-xl border border-[#27272a] bg-[#16161a] p-5 space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-2">
+                                            <span id="scan-progress-spinner" class="inline-block w-3 h-3 rounded-full bg-blue-500 animate-pulse"></span>
+                                            <p id="scan-progress-label" class="text-sm font-semibold text-white">Scanning...</p>
+                                        </div>
+                                        <button id="scan-cancel-btn" onclick="cancelScan()" class="text-xs text-[#a1a1aa] hover:text-rose-400 transition-colors">Cancel</button>
+                                    </div>
+                                    <div class="w-full bg-[#27272a] rounded-full h-2 overflow-hidden">
+                                        <div id="scan-progress-bar" class="h-2 rounded-full bg-blue-500 transition-all duration-300" style="width:0%"></div>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-3 text-center">
+                                        <div class="p-3 bg-[#1c1c22] rounded-lg border border-[#27272a]">
+                                            <p class="text-xs text-[#71717a]">Files Scanned</p>
+                                            <p id="sp-files" class="text-lg font-bold text-white">0</p>
+                                            <p id="sp-total" class="text-xs text-[#71717a]">of 0</p>
+                                        </div>
+                                        <div class="p-3 bg-[#1c1c22] rounded-lg border border-[#27272a]">
+                                            <p class="text-xs text-[#71717a]">Threats Found</p>
+                                            <p id="sp-threats" class="text-lg font-bold text-rose-400">0</p>
+                                        </div>
+                                        <div class="p-3 bg-[#1c1c22] rounded-lg border border-[#27272a]">
+                                            <p class="text-xs text-[#71717a]">Est. Time Left</p>
+                                            <p id="sp-eta" class="text-lg font-bold text-white">—</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-[#71717a] mb-1">Currently scanning:</p>
+                                        <p id="sp-current-file" class="text-xs text-[#a1a1aa] font-mono truncate bg-[#1c1c22] px-3 py-2 rounded-lg border border-[#27272a]">—</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quick presets -->
+                            <div>
+                                <p class="text-xs text-[#71717a] mb-2 font-medium uppercase tracking-wider">Quick Scan</p>
+                                <div class="grid grid-cols-3 gap-3">
+                                    <button onclick="scanPreset('Downloads')" class="btn btn-secondary flex-col items-center py-3">
+                                        <i data-lucide="download" class="w-5 h-5 mb-1"></i>
+                                        <span class="text-xs">Downloads</span>
+                                    </button>
+                                    <button onclick="scanPreset('Documents')" class="btn btn-secondary flex-col items-center py-3">
+                                        <i data-lucide="file-text" class="w-5 h-5 mb-1"></i>
+                                        <span class="text-xs">Documents</span>
+                                    </button>
+                                    <button onclick="scanPreset('Desktop')" class="btn btn-secondary flex-col items-center py-3">
+                                        <i data-lucide="monitor" class="w-5 h-5 mb-1"></i>
+                                        <span class="text-xs">Desktop</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Custom / targeted scan -->
+                            <div>
+                                <p class="text-xs text-[#71717a] mb-2 font-medium uppercase tracking-wider">Custom Scan</p>
+                                <div id="drop-zone" class="mb-3 p-5 rounded-xl border-2 border-dashed border-[#27272a] text-center cursor-pointer hover:border-[#3b82f6] hover:bg-[#16161a] transition-colors">
+                                    <i data-lucide="upload-cloud" class="w-6 h-6 mx-auto text-[#71717a] mb-1"></i>
+                                    <p class="text-xs text-[#a1a1aa]">Drag & drop a file or folder here, or click to browse</p>
+                                </div>
+                                <div class="flex flex-wrap items-end gap-3">
+                                    <div class="flex-1 min-w-[14rem]">
+                                        <input id="scan-path" type="text" class="w-full" placeholder="/path/to/file or /path/to/directory">
+                                    </div>
+                                    <button onclick="pickFile()" class="btn btn-secondary">
+                                        <i data-lucide="folder-open" class="w-4 h-4"></i>
+                                        File
+                                    </button>
+                                    <button onclick="pickDirectory()" class="btn btn-secondary">
+                                        <i data-lucide="folder-tree" class="w-4 h-4"></i>
+                                        Folder
+                                    </button>
+                                    <button onclick="scanFile()" id="file-scan-btn" class="btn btn-secondary">
+                                        <i data-lucide="file" class="w-4 h-4"></i>
+                                        Scan File
+                                    </button>
+                                    <button onclick="scanDirectory()" id="dir-scan-btn" class="btn btn-secondary">
+                                        <i data-lucide="folder" class="w-4 h-4"></i>
+                                        Scan Folder
+                                    </button>
+                                </div>
+                                <label class="flex items-center gap-2 text-sm text-[#a1a1aa] mt-3">
+                                    <input id="scan-recursive" type="checkbox" checked class="accent-[#3b82f6] w-4 h-4">
+                                    Recursive
+                                </label>
+                                <input type="hidden" id="scan-type" value="full">
+                            </div>
+
+                            <!-- Real-time protection -->
+                            <div class="flex items-center justify-between p-4 bg-[#16161a] rounded-xl border border-[#27272a]">
+                                <div>
+                                    <p class="text-sm font-semibold text-white">Real-time Protection</p>
+                                    <p class="text-xs text-[#a1a1aa]">Monitor file system for threats</p>
+                                </div>
+                                <button onclick="toggleRealtime()" id="realtime-toggle" class="btn btn-primary">
+                                    Start Protection
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-5">
+                            <div class="glass-card p-6">
+                                <h3 class="text-base font-semibold text-white mb-4">Scan Stats</h3>
+                                <div class="space-y-4">
+                                    <div class="p-4 bg-[#16161a] rounded-xl border border-[#27272a]">
+                                        <p class="text-xs text-[#a1a1aa]">Last Scan</p>
+                                        <p id="scan-last-time" class="text-sm font-semibold text-white">Never</p>
+                                        <p id="scan-last-target" class="text-xs text-[#71717a] truncate"></p>
+                                    </div>
+                                    <div class="p-4 bg-[#16161a] rounded-xl border border-[#27272a]">
+                                        <p class="text-xs text-[#a1a1aa]">Files Scanned</p>
+                                        <p id="scan-files-count" class="text-2xl font-bold text-white">0</p>
+                                    </div>
+                                    <div class="p-4 bg-[#16161a] rounded-xl border border-[#27272a]">
+                                        <p class="text-xs text-[#a1a1aa]">Threats Found</p>
+                                        <p id="scan-threats-count" class="text-2xl font-bold text-rose-400">0</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="glass-card p-6">
+                                <h3 class="text-base font-semibold text-white mb-4">Ignored Items</h3>
+                                <div id="ignore-list" class="space-y-2 max-h-48 overflow-y-auto">
+                                    <p class="text-sm text-[#71717a]">No ignored files.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-base font-semibold text-white">Scan Results</h3>
+                            <button onclick="loadThreatResults()" class="btn btn-secondary">Refresh</button>
+                        </div>
+                        <div id="threat-results" class="space-y-2">
+                            <p class="text-sm text-[#71717a]">No threats detected yet.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quarantine -->
+                <div id="view-quarantine" class="view hidden space-y-5">
+                    <div>
+                        <h2 class="section-title">Quarantine</h2>
+                        <p class="section-subtitle">Files isolated for safety</p>
+                    </div>
+                    <div class="glass-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-base font-semibold text-white">Quarantined Files</h3>
+                            <button onclick="loadQuarantine()" class="btn btn-secondary">Refresh</button>
+                        </div>
+                        <div id="quarantine-list" class="space-y-2">
+                            <p class="text-sm text-[#71717a]">No quarantined files.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scans -->
+                <div id="view-scans" class="view hidden space-y-5">
+                    <div>
+                        <h2 class="section-title">Scan History</h2>
+                        <p class="section-subtitle">Recent security actions</p>
+                    </div>
+                    <div class="glass-card p-6">
+                        <div id="scan-history" class="space-y-3">
+                            <p class="text-sm text-[#71717a]">Scan history will appear here after you run scans.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Network Threats -->
+                <div id="view-network-threats" class="view hidden space-y-5">
+                    <div>
+                        <h2 class="section-title">URL & Host Scanner</h2>
+                        <p class="section-subtitle">Check URLs, IPs, and domains against threat intelligence feeds</p>
+                    </div>
+                    <div class="glass-card p-6">
+                        <div class="space-y-4 max-w-2xl">
+                            <div>
+                                <label class="block text-xs text-[#a1a1aa] mb-1">URL</label>
+                                <div class="flex gap-2">
+                                    <input id="check-url-input" type="text" class="flex-1" placeholder="https://example.com/malware.zip">
+                                    <button onclick="checkUrl()" id="check-url-btn" class="btn btn-primary">Check URL</button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-[#a1a1aa] mb-1">IP or Domain</label>
+                                <div class="flex gap-2">
+                                    <input id="check-host-input" type="text" class="flex-1" placeholder="192.168.1.1 or evil.com">
+                                    <button onclick="checkHost()" id="check-host-btn" class="btn btn-primary">Check Host</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="network-threat-status" class="mt-4 hidden"></div>
+                    </div>
+
+                    <div class="glass-card p-6">
+                        <h3 class="text-base font-semibold text-white mb-4">Threat Intelligence Sources</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-4 bg-[#16161a] rounded-xl border border-[#27272a]">
+                                <p class="text-sm font-semibold text-white">URLhaus</p>
+                                <p class="text-xs text-[#a1a1aa]">Malware distribution sites and payloads</p>
+                                <span class="text-xs text-[#22c55e] font-semibold mt-2 inline-block">Enabled</span>
+                            </div>
+                            <div class="p-4 bg-[#16161a] rounded-xl border border-[#27272a]">
+                                <p class="text-sm font-semibold text-white">ThreatFox</p>
+                                <p class="text-xs text-[#a1a1aa]">IOC database for IPs, domains, and file hashes</p>
+                                <span class="text-xs text-[#22c55e] font-semibold mt-2 inline-block">Enabled</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vulnerabilities -->
+                <div id="view-vulns" class="view hidden space-y-5">
+                    <div>
+                        <h2 class="section-title">Vulnerability Scanner</h2>
+                        <p class="section-subtitle">Check software against CISA's Known Exploited Vulnerabilities catalog</p>
+                    </div>
+                    <div class="glass-card p-6">
+                        <div class="flex gap-2 mb-4 max-w-xl">
+                            <input id="vuln-product-input" type="text" class="flex-1" placeholder="Product name, e.g. Chrome, Windows, Adobe">
+                            <button onclick="checkVulns()" id="vuln-check-btn" class="btn btn-primary">Check</button>
+                            <button onclick="checkRunningVulns()" id="vuln-running-btn" class="btn btn-secondary">Scan Running Apps</button>
+                        </div>
+                        <button onclick="updateFeeds()" id="update-feeds-btn" class="btn btn-secondary mb-4">Update CISA Feed</button>
+                        <p class="text-xs text-[#71717a] mb-4">Auto-updates every hour. <span id="feed-status-text">Checking schedule...</span></p>
+                        <div id="vuln-results" class="space-y-2">
+                            <p class="text-sm text-[#71717a]">No vulnerability checks yet.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- License -->
+                <div id="view-license" class="view hidden space-y-5">
+                    <div>
+                        <h2 class="section-title">License & Subscription</h2>
+                        <p class="section-subtitle">Manage your Sentinel license, activation, and billing</p>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                        <div class="glass-card p-6 lg:col-span-2">
+                            <div class="flex items-center justify-between mb-6">
+                                <div>
+                                    <h3 class="text-base font-semibold text-white">License Details</h3>
+                                    <p class="text-xs text-[#a1a1aa] mt-1">Activation and device information</p>
+                                </div>
+                                <span id="license-status-badge" class="badge badge-clean">Checking...</span>
+                            </div>
+
+                            <div class="space-y-5">
+                                <div>
+                                    <label class="block text-xs text-[#a1a1aa] mb-1">License Key</label>
+                                    <div class="flex gap-2">
+                                        <input id="license-key-input" type="text" class="flex-1 font-mono" placeholder="XXXX-XXXX-XXXX-XXXX">
+                                        <button onclick="saveLicenseKey()" class="btn btn-secondary">Save</button>
+                                    </div>
+                                    <p id="license-key-display" class="text-sm text-[#71717a] mt-2 hidden"></p>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs text-[#a1a1aa] mb-1">License Server URL</label>
+                                    <input id="license-server-input" type="text" class="w-full" placeholder="http://127.0.0.1:5000">
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                    <div class="p-4 bg-[#16161a] rounded-xl border border-[#27272a]">
+                                        <p class="text-xs text-[#a1a1aa]">Tier</p>
+                                        <p id="license-tier" class="text-base font-semibold text-white mt-1">--</p>
+                                    </div>
+                                    <div class="p-4 bg-[#16161a] rounded-xl border border-[#27272a]">
+                                        <p class="text-xs text-[#a1a1aa]">Expires</p>
+                                        <p id="license-expires" class="text-base font-semibold text-white mt-1">--</p>
+                                    </div>
+                                    <div class="p-4 bg-[#16161a] rounded-xl border border-[#27272a]">
+                                        <p class="text-xs text-[#a1a1aa]">Devices</p>
+                                        <p id="license-devices" class="text-base font-semibold text-white mt-1">--</p>
+                                    </div>
+                                    <div class="p-4 bg-[#16161a] rounded-xl border border-[#27272a]">
+                                        <p class="text-xs text-[#a1a1aa]">Activation</p>
+                                        <p id="license-activated" class="text-base font-semibold text-white mt-1">--</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-wrap gap-3">
+                                    <button onclick="activateLicense()" id="activate-license-btn" class="btn btn-primary">
+                                        <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                        Activate
+                                    </button>
+                                    <button onclick="validateLicense()" class="btn btn-secondary">
+                                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                                        Validate
+                                    </button>
+                                    <button onclick="deactivateLicense()" class="btn btn-secondary">
+                                        <i data-lucide="x-circle" class="w-4 h-4"></i>
+                                        Deactivate
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="license-message" class="mt-4 hidden"></div>
+                        </div>
+
+                        <div class="space-y-5">
+                            <div class="glass-card p-6">
+                                <h3 class="text-base font-semibold text-white mb-4">Subscription</h3>
+                                <div class="flex items-center gap-2 mb-3">
+                                    <p class="text-xs text-[#a1a1aa]">Billing and subscriptions are not yet available in this beta.</p>
+                                </div>
+                                <div class="space-y-3" style="opacity:0.4;pointer-events:none">
+                                    <div>
+                                        <label class="block text-xs text-[#a1a1aa] mb-1">Email</label>
+                                        <input id="checkout-email" type="email" class="w-full" placeholder="you@example.com" disabled>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs text-[#a1a1aa] mb-1">Tier</label>
+                                        <select id="checkout-tier" class="w-full" disabled>
+                                            <option value="home">Home (1 device)</option>
+                                            <option value="business">Business (5 devices)</option>
+                                            <option value="enterprise">Enterprise (50 devices)</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn btn-primary w-full" disabled>
+                                        <i data-lucide="credit-card" class="w-4 h-4"></i>
+                                        Buy / Upgrade
+                                    </button>
+                                    <div>
+                                        <label class="block text-xs text-[#a1a1aa] mb-1">Stripe Customer ID</label>
+                                        <input id="customer-portal-id" type="text" class="w-full" placeholder="cus_..." disabled>
+                                    </div>
+                                    <button class="btn btn-secondary w-full" disabled>
+                                        <i data-lucide="user-circle" class="w-4 h-4"></i>
+                                        Manage Billing
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="glass-card p-6" style="opacity:0.45">
+                                <div class="flex items-center gap-2 mb-4">
+                                    <h3 class="text-base font-semibold text-white">Downloads</h3>
+                                    <span class="text-xs px-2 py-0.5 rounded-full bg-[#27272a] text-[#71717a]">Coming soon</span>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between p-3 bg-[#16161a] rounded-xl border border-[#27272a]">
+                                        <div>
+                                            <p class="text-sm font-semibold text-white">Sentinel for macOS</p>
+                                            <p class="text-xs text-[#a1a1aa]">Apple Silicon</p>
+                                        </div>
+                                        <span class="text-xs text-[#71717a]">Not available yet</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-[#16161a] rounded-xl border border-[#27272a]">
+                                        <div>
+                                            <p class="text-sm font-semibold text-white">Sentinel for Windows</p>
+                                            <p class="text-xs text-[#a1a1aa]">64-bit</p>
+                                        </div>
+                                        <span class="text-xs text-[#71717a]">Not available yet</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-[#16161a] rounded-xl border border-[#27272a]">
+                                        <div>
+                                            <p class="text-sm font-semibold text-white">Sentinel for Linux</p>
+                                            <p class="text-xs text-[#a1a1aa]">x86_64</p>
+                                        </div>
+                                        <span class="text-xs text-[#71717a]">Not available yet</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings -->
+                <div id="view-settings" class="view hidden space-y-5">
+                    <div>
+                        <h2 class="section-title">Settings</h2>
+                        <p class="section-subtitle">Configure threat intelligence and engine preferences</p>
+                    </div>
+                    <div class="glass-card p-6">
+                        <h3 class="text-base font-semibold text-white mb-6">Threat Intelligence Sources</h3>
+                        <div class="space-y-5 max-w-xl">
+                            <div class="p-4 bg-[#16161a] rounded-xl border border-[#27272a]">
+                                <div class="flex items-center justify-between mb-2">
+                                    <p class="text-sm font-semibold text-white">VirusTotal</p>
+                                    <span id="vt-status" class="text-xs text-[#71717a]">No API key</span>
+                                </div>
+                                <p class="text-xs text-[#a1a1aa] mb-3">Lookup file hashes against 70+ antivirus engines.</p>
+                                <div class="flex gap-2">
+                                    <input id="vt-api-key" type="password" class="flex-1" placeholder="VirusTotal API key">
+                                    <button onclick="saveVirusTotalKey()" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>
+
+                            <div class="p-4 bg-[#16161a] rounded-xl border border-[#27272a]">
+                                <div class="flex items-center justify-between mb-2">
+                                    <p class="text-sm font-semibold text-white">MalwareBazaar</p>
+                                    <span class="text-xs text-[#22c55e] font-semibold">Enabled</span>
+                                </div>
+                                <p class="text-xs text-[#a1a1aa]">Lookup file hashes against the Abuse.ch malware database.</p>
+                            </div>
+
+                            <div class="p-4 bg-[#16161a] rounded-xl border border-[#27272a]">
+                                <div class="flex items-center justify-between mb-2">
+                                    <p class="text-sm font-semibold text-white">YARA Rules</p>
+                                    <span id="yara-status" class="text-xs text-[#71717a]">Checking...</span>
+                                </div>
+                                <p class="text-xs text-[#a1a1aa] mb-3">Pattern matching with built-in rules and optional signature-base rule pack.</p>
+                                <button onclick="downloadYaraRules()" id="yara-download-btn" class="btn btn-primary">
+                                    <i data-lucide="download" class="w-4 h-4"></i>
+                                    Download Signature-Base Rules
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Beta Program -->
+                    <div class="glass-card p-6">
+                        <div class="flex items-center gap-2 mb-4">
+                            <h3 class="text-base font-semibold text-white">Beta Program</h3>
+                            <span id="beta-status-badge" class="text-xs px-2 py-0.5 rounded-full bg-[#27272a] text-[#71717a]">Not configured</span>
+                        </div>
+                        <p class="text-xs text-[#71717a] mb-4">Connect to the Sentinel admin server to receive updates and participate in the beta program.</p>
+                        <div class="space-y-3 max-w-xl">
+                            <div>
+                                <label class="text-xs text-[#71717a] block mb-1">Admin Server URL</label>
+                                <input id="beta-admin-url" type="text" placeholder="https://web-production-4f62.up.railway.app" class="w-full">
+                            </div>
+                            <div>
+                                <label class="text-xs text-[#71717a] block mb-1">Beta Key</label>
+                                <input id="beta-key-input" type="text" placeholder="SENT-XXXXX-XXXXX-XXXXX" class="w-full font-mono uppercase">
+                            </div>
+                            <button onclick="configureBeta()" class="btn btn-primary">Activate Beta Access</button>
+                            <p id="beta-configure-status" class="text-xs mt-1 hidden"></p>
+                        </div>
+                        <div id="beta-info" class="mt-4 hidden p-3 rounded-lg bg-[#16161a] border border-[#27272a] space-y-1">
+                            <p class="text-xs text-[#71717a]">Machine ID: <span id="beta-machine-id" class="font-mono text-[#a1a1aa]"></span></p>
+                            <p class="text-xs text-[#71717a]">Version: <span id="beta-version" class="text-[#a1a1aa]"></span></p>
+                            <p class="text-xs text-[#71717a]">Admin: <span id="beta-admin-url-display" class="text-[#a1a1aa]"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6">
+                        <h3 class="text-base font-semibold text-white mb-2">About</h3>
+                        <p class="text-sm text-[#a1a1aa]">Sentinel Security Suite <span id="about-version">v1.0.0-beta</span></p>
+                        <p class="text-sm text-[#a1a1aa] mt-1">Standalone network security engine built with Python and Electron.</p>
+                    </div>
+                </div>
+            </div>
+
+                <!-- Feedback -->
+                <div id="view-feedback" class="view hidden space-y-6">
+
+                    <!-- Page header -->
+                    <div class="flex items-center justify-between flex-wrap gap-3">
+                        <div>
+                            <h2 class="section-title">Send Feedback</h2>
+                            <p class="section-subtitle">Report bugs, share suggestions, or send diagnostics to the Sentinel team</p>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:7px;padding:6px 14px;border-radius:9999px;background:#16161a;border:1px solid #27272a;font-size:11px;font-weight:600;color:#a1a1aa">
+                            <span id="feedback-conn-dot" style="width:7px;height:7px;border-radius:9999px;background:#71717a;flex-shrink:0;display:block"></span>
+                            <span id="feedback-conn-status">Checking…</span>
+                        </div>
+                    </div>
+
+                    <!-- Type tabs -->
+                    <div style="display:flex;gap:6px;background:#111115;border:1px solid #27272a;border-radius:12px;padding:5px;width:fit-content">
+                        <button onclick="setFeedbackType('bug')" id="ftab-bug" style="display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;transition:.12s;background:transparent;color:#71717a">
+                            <i data-lucide="bug" class="w-3.5 h-3.5"></i> Bug Report
+                        </button>
+                        <button onclick="setFeedbackType('suggestion')" id="ftab-suggestion" style="display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;transition:.12s;background:transparent;color:#71717a">
+                            <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i> Suggestion
+                        </button>
+                        <button onclick="setFeedbackType('diagnostic')" id="ftab-diagnostic" style="display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;transition:.12s;background:transparent;color:#71717a">
+                            <i data-lucide="activity" class="w-3.5 h-3.5"></i> Diagnostics
+                        </button>
+                        <input type="hidden" id="feedback-type" value="bug">
+                    </div>
+
+                    <!-- Body -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+                        <!-- Left: compose -->
+                        <div class="glass-card p-6 lg:col-span-2" style="display:flex;flex-direction:column;gap:16px">
+
+                            <div id="feedback-type-hint" style="padding:10px 14px;border-radius:10px;background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.18);font-size:12px;color:#fca5a5;line-height:1.5">
+                                <strong style="color:#f87171">Bug Report</strong> — describe what went wrong, steps to reproduce, and any error messages you saw.
+                            </div>
+
+                            <div>
+                                <label style="display:block;font-size:11px;font-weight:700;color:#71717a;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Message</label>
+                                <textarea id="feedback-message" rows="7" style="width:100%;background:#0d0d10;border:1px solid #27272a;border-radius:10px;padding:12px 14px;color:#e4e4e7;font-size:13px;outline:none;resize:vertical;font-family:inherit;line-height:1.6;box-sizing:border-box" placeholder="Describe the issue in detail…"></textarea>
+                            </div>
+
+                            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 14px;background:#0d0d10;border:1px solid #27272a;border-radius:10px">
+                                <div>
+                                    <p style="font-size:12px;font-weight:600;color:#fff;margin:0 0 2px">Include system diagnostics</p>
+                                    <p style="font-size:11px;color:#71717a;margin:0">OS, CPU, memory, disk, threat count — no personal files</p>
+                                </div>
+                                <input type="checkbox" id="include-diagnostics" checked style="accent-color:#3b82f6;width:16px;height:16px;cursor:pointer;flex-shrink:0">
+                            </div>
+
+                            <button onclick="submitFeedback()" id="feedback-submit-btn" class="btn btn-primary" style="justify-content:center;width:100%;padding:11px 0">
+                                <i data-lucide="send" class="w-4 h-4"></i>
+                                Send Feedback
+                            </button>
+
+                            <div id="feedback-status" class="hidden" style="font-size:12px;padding:10px 13px;border-radius:8px"></div>
+                        </div>
+
+                        <!-- Right: sidebar -->
+                        <div style="display:flex;flex-direction:column;gap:14px">
+                            <div class="glass-card p-5">
+                                <h4 style="font-size:12px;font-weight:700;color:#fff;margin:0 0 12px">Tips for bug reports</h4>
+                                <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px">
+                                    <li style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#a1a1aa"><span style="color:#22c55e;flex-shrink:0;margin-top:1px">✓</span>Steps to reproduce the issue</li>
+                                    <li style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#a1a1aa"><span style="color:#22c55e;flex-shrink:0;margin-top:1px">✓</span>What you expected vs what happened</li>
+                                    <li style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#a1a1aa"><span style="color:#22c55e;flex-shrink:0;margin-top:1px">✓</span>Any error messages you saw</li>
+                                    <li style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#a1a1aa"><span style="color:#22c55e;flex-shrink:0;margin-top:1px">✓</span>How often it happens</li>
+                                </ul>
+                            </div>
+                            <div class="glass-card p-5">
+                                <h4 style="font-size:12px;font-weight:700;color:#fff;margin:0 0 8px">Privacy</h4>
+                                <p style="font-size:12px;color:#71717a;line-height:1.6;margin:0">Diagnostics include OS, CPU %, memory %, disk %, protection state and threat counts. <span style="color:#a1a1aa">No personal files or filenames are ever sent.</span></p>
+                            </div>
+                            <div class="glass-card p-5" style="border-color:rgba(59,130,246,0.2)">
+                                <h4 style="font-size:12px;font-weight:700;color:#fff;margin:0 0 10px">Messages from Admin</h4>
+                                <div id="admin-msg-list" style="font-size:12px;color:#71717a">No messages.</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+        </main>
+    </div>
+
+    <!-- Protection disable warning modal -->
+    <div id="protection-warn-modal" style="display:none;position:fixed;inset:0;background:rgba(7,7,10,.85);z-index:9998;align-items:center;justify-content:center;backdrop-filter:blur(4px)">
+        <div style="background:#111117;border:1px solid rgba(239,68,68,.35);border-radius:18px;padding:36px;max-width:420px;width:90%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.7)">
+            <div style="width:52px;height:52px;background:rgba(239,68,68,.12);border-radius:14px;margin:0 auto 18px;display:flex;align-items:center;justify-content:center">
+                <i data-lucide="shield-off" style="width:26px;height:26px;color:#ef4444"></i>
+            </div>
+            <h3 style="font-size:17px;font-weight:800;color:#fff;margin-bottom:8px">Disable Real-time Protection?</h3>
+            <p style="font-size:13px;color:#a1a1aa;line-height:1.6;margin-bottom:18px">Turning off real-time protection leaves your system <strong style="color:#f87171">exposed to threats</strong>. Malware, ransomware, and suspicious files will <strong style="color:#f87171">not be detected</strong> until protection is re-enabled.</p>
+            <div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.18);border-radius:10px;padding:12px 14px;margin-bottom:22px;text-align:left">
+                <p style="font-size:11px;font-weight:700;color:#f87171;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Risks include</p>
+                <ul style="font-size:12px;color:#fca5a5;line-height:2;list-style:none;padding:0;margin:0">
+                    <li>⚠ Malware and ransomware infections</li>
+                    <li>⚠ Data theft via malicious files</li>
+                    <li>⚠ Silent execution of suspicious scripts</li>
+                </ul>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:center">
+                <button onclick="cancelDisableProtection()" class="btn btn-secondary" style="flex:1">Keep Protection On</button>
+                <button onclick="confirmDisableProtection()" style="flex:1;padding:8px 16px;border-radius:9px;background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);font-size:13px;font-weight:600;cursor:pointer">Disable Anyway</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update notification toast -->
+    <div id="update-toast" style="display:none;position:fixed;bottom:24px;right:24px;z-index:9999;max-width:380px;background:#111113;border:1px solid #3b82f6;border-radius:12px;padding:16px 20px;box-shadow:0 20px 60px rgba(0,0,0,.7)">
+        <div style="display:flex;align-items:start;justify-content:space-between;gap:12px">
+            <div>
+                <p style="font-size:13px;font-weight:700;color:#fff;margin:0 0 4px">Update Available</p>
+                <p id="update-toast-version" style="font-size:12px;color:#3b82f6;margin:0 0 6px"></p>
+                <p id="update-toast-notes" style="font-size:11px;color:#a1a1aa;margin:0 0 10px;max-height:60px;overflow:hidden"></p>
+                <div style="display:flex;gap:8px">
+                    <a id="update-toast-link" href="#" target="_blank" style="font-size:12px;font-weight:600;padding:5px 12px;border-radius:8px;background:#3b82f6;color:#fff;text-decoration:none">Download</a>
+                    <button onclick="document.getElementById('update-toast').style.display='none'" style="font-size:12px;padding:5px 12px;border-radius:8px;background:#1c1c21;border:1px solid #27272a;color:#a1a1aa;cursor:pointer">Later</button>
+                </div>
+            </div>
+            <button onclick="document.getElementById('update-toast').style.display='none'" style="background:none;border:none;color:#71717a;cursor:pointer;font-size:16px;line-height:1">✕</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

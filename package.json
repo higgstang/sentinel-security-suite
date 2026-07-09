@@ -1,0 +1,60 @@
+{
+  "name": "sentinel-security-suite",
+  "version": "1.0.0",
+  "description": "Standalone network security suite",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build-mac": "electron-builder --mac",
+    "build-win": "electron-builder --win",
+    "build-linux": "electron-builder --linux"
+  },
+  "author": "You",
+  "license": "MIT",
+  "build": {
+    "appId": "com.sentinel.security-suite",
+    "productName": "Sentinel Security Suite",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "assets/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "python-engine/dist/sentinel-engine",
+        "to": "python-engine/sentinel-engine",
+        "filter": ["!*.exe"]
+      },
+      {
+        "from": "python-engine/dist/sentinel-engine.exe",
+        "to": "python-engine/sentinel-engine.exe",
+        "filter": ["*.exe"]
+      }
+    ],
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.utilities",
+      "icon": "assets/icon.png"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
+    }
+  },
+  "devDependencies": {
+    "electron": "^31.7.7",
+    "electron-builder": "^24.13.0"
+  },
+  "allowScripts": {
+    "electron@31.7.7": true
+  }
+}

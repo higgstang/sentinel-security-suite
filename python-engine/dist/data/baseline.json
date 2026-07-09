@@ -1,0 +1,95 @@
+{
+  "created_at": "2026-07-09T18:49:05.828963Z",
+  "devices": [
+    {
+      "ip": "10.0.0.1",
+      "hostname": "10.0.0.1",
+      "vendor": "Unknown",
+      "mac": null,
+      "open_ports": [
+        53,
+        80,
+        443
+      ],
+      "first_seen": "2026-07-09T18:48:49.087349Z"
+    },
+    {
+      "ip": "10.0.0.5",
+      "hostname": "10.0.0.5",
+      "vendor": "Unknown",
+      "mac": null,
+      "open_ports": [],
+      "first_seen": "2026-07-09T18:48:50.600414Z"
+    },
+    {
+      "ip": "10.0.0.141",
+      "hostname": "10.0.0.141",
+      "vendor": "Unknown",
+      "mac": null,
+      "open_ports": [],
+      "first_seen": "2026-07-09T18:48:50.661522Z"
+    },
+    {
+      "ip": "10.0.0.118",
+      "hostname": "10.0.0.118",
+      "vendor": "Unknown",
+      "mac": null,
+      "open_ports": [],
+      "first_seen": "2026-07-09T18:48:50.687244Z"
+    },
+    {
+      "ip": "10.0.0.185",
+      "hostname": "10.0.0.185",
+      "vendor": "Unknown",
+      "mac": null,
+      "open_ports": [],
+      "first_seen": "2026-07-09T18:48:50.707102Z"
+    },
+    {
+      "ip": "10.0.0.205",
+      "hostname": "10.0.0.205",
+      "vendor": "Unknown",
+      "mac": null,
+      "open_ports": [],
+      "first_seen": "2026-07-09T18:48:50.732367Z"
+    },
+    {
+      "ip": "10.0.0.207",
+      "hostname": "10.0.0.207",
+      "vendor": "Unknown",
+      "mac": null,
+      "open_ports": [],
+      "first_seen": "2026-07-09T18:48:50.752882Z"
+    },
+    {
+      "ip": "10.0.0.236",
+      "hostname": "10.0.0.236",
+      "vendor": "Unknown",
+      "mac": null,
+      "open_ports": [
+        8080
+      ],
+      "first_seen": "2026-07-09T18:48:50.282448Z"
+    },
+    {
+      "ip": "10.0.0.234",
+      "hostname": "10.0.0.234",
+      "vendor": "Unknown",
+      "mac": null,
+      "open_ports": [
+        8080
+      ],
+      "first_seen": "2026-07-09T18:48:43.283380Z"
+    },
+    {
+      "ip": "10.0.0.251",
+      "hostname": "10.0.0.251",
+      "vendor": "Unknown",
+      "mac": null,
+      "open_ports": [
+        7000
+      ],
+      "first_seen": "2026-07-09T18:48:50.328652Z"
+    }
+  ]
+}

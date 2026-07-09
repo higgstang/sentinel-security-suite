@@ -1,0 +1,146 @@
+[
+  {
+    "id": 1783631237971,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd, suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_metasploit_payloads.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_metasploit_payloads.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd, suspicious_wscript",
+      "severity": "high",
+      "timestamp": "2026-07-09T21:07:17.970010Z",
+      "file_size": 14953,
+      "file_hash": "559cfb96f7f468a7108f621a3a2690c0e23115319205afdcc54f008243653df6"
+    },
+    "timestamp": "2026-07-09T21:07:17.971016Z",
+    "read": false
+  },
+  {
+    "id": 1783631194204,
+    "type": "malware",
+    "message": "Real-time detection: JavaScript eval usage in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_apt6_malware.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_apt6_malware.yar",
+      "threat_type": "suspicious_content",
+      "description": "JavaScript eval usage",
+      "severity": "medium",
+      "timestamp": "2026-07-09T21:06:34.199063Z",
+      "file_size": 2179,
+      "file_hash": "bd327eebfe988fa8fdc2f9d02880fac08dc04c6fddada637f08d90f51e1ee8cd"
+    },
+    "timestamp": "2026-07-09T21:06:34.205905Z",
+    "read": false
+  },
+  {
+    "id": 1783631150749,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_glassRAT.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_glassRAT.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T21:05:50.748557Z",
+      "file_size": 2828,
+      "file_hash": "b9e7790133306ef9a92808f87e1ff96026bf3e026e79d2b5b7b097d6ec23ab90"
+    },
+    "timestamp": "2026-07-09T21:05:50.749235Z",
+    "read": false
+  },
+  {
+    "id": 1783631117134,
+    "type": "malware",
+    "message": "Real-time detection: JavaScript eval usage in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_threatgroup_3390.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_threatgroup_3390.yar",
+      "threat_type": "suspicious_content",
+      "description": "JavaScript eval usage",
+      "severity": "medium",
+      "timestamp": "2026-07-09T21:05:17.129966Z",
+      "file_size": 12676,
+      "file_hash": "6a028db5f38537aa0d47c5801845c846c41f4b77a4b47fc269a2683d96eb176a"
+    },
+    "timestamp": "2026-07-09T21:05:17.134989Z",
+    "read": false
+  },
+  {
+    "id": 1783630705015,
+    "type": "malware",
+    "message": "Real-time detection: JavaScript eval usage in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_apt6_malware.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_apt6_malware.yar",
+      "threat_type": "suspicious_content",
+      "description": "JavaScript eval usage",
+      "severity": "medium",
+      "timestamp": "2026-07-09T20:58:25.008983Z",
+      "file_size": 2179,
+      "file_hash": "bd327eebfe988fa8fdc2f9d02880fac08dc04c6fddada637f08d90f51e1ee8cd"
+    },
+    "timestamp": "2026-07-09T20:58:25.015718Z",
+    "read": false
+  },
+  {
+    "id": 1783630652610,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_recon_indicators.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_recon_indicators.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_wscript",
+      "severity": "high",
+      "timestamp": "2026-07-09T20:57:32.610645Z",
+      "file_size": 2493,
+      "file_hash": "baeb6cedf0e9e6410b404b796f3149f2543907adba07c93be7daa71a0f43c9c8"
+    },
+    "timestamp": "2026-07-09T20:57:32.610960Z",
+    "read": false
+  },
+  {
+    "id": 1783630520298,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_rokrat.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_rokrat.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_wscript",
+      "severity": "high",
+      "timestamp": "2026-07-09T20:55:20.296959Z",
+      "file_size": 4961,
+      "file_hash": "3b9f91888862f6c1a9db77716c6a654fc964cc1d7924d9979b3e23ae406d4bb1"
+    },
+    "timestamp": "2026-07-09T20:55:20.298961Z",
+    "read": false
+  },
+  {
+    "id": 1783630519448,
+    "type": "malware",
+    "message": "Real-time detection: JavaScript eval usage in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_webshells_ext_vars.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_webshells_ext_vars.yar",
+      "threat_type": "suspicious_content",
+      "description": "JavaScript eval usage",
+      "severity": "medium",
+      "timestamp": "2026-07-09T20:55:19.447376Z",
+      "file_size": 4131,
+      "file_hash": "0c9305c3b911161c3649aefcd778f81f1501acfad8ee02bc342e91bcd3fedf1b"
+    },
+    "timestamp": "2026-07-09T20:55:19.448411Z",
+    "read": false
+  },
+  {
+    "id": 1783630502151,
+    "type": "malware",
+    "message": "Real-time detection: Hex-encoded payload in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/susp_vulndriver_hp_hardware_diagnostics_etdsupp_may23.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/susp_vulndriver_hp_hardware_diagnostics_etdsupp_may23.yar",
+      "threat_type": "suspicious_content",
+      "description": "Hex-encoded payload",
+      "severity": "medium",
+      "timestamp": "2026-07-09T20:55:02.150926Z",
+      "file_size": 1118,
+      "file_hash": "b9ed1341bef9e183a95c4497389bc7b7129a87ef815481578552487cd4af9484"
+    },
+    "timestamp": "2026-07-09T20:55:02.151636Z",
+    "read": false
+  }
+]

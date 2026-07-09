@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sentinel Super User Panel</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07070a;--surf:#0d0d12;--card:#111117;--bdr:#1f1f28;
+  --txt:#e4e4e7;--muted:#71717a;--dim:#3f3f46;
+  --blue:#3b82f6;--green:#22c55e;--red:#ef4444;--amber:#f59e0b;--purple:#8b5cf6;--cyan:#06b6d4;
+}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;display:flex}
+
+/* SIDEBAR */
+.sb{width:220px;background:var(--surf);border-right:1px solid var(--bdr);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:50;flex-shrink:0}
+.sb-logo{display:flex;align-items:center;gap:11px;padding:18px 16px 16px;border-bottom:1px solid var(--bdr)}
+.sb-logo-mark{width:32px;height:32px;background:linear-gradient(135deg,#1e40af,#3b82f6);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-logo h1{font-size:14px;font-weight:700;color:#fff;line-height:1.2}
+.sb-logo p{font-size:10px;color:var(--muted)}
+.sb-section{padding:8px 8px 0;font-size:9px;font-weight:700;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-top:10px}
+.sb-nav{padding:6px 8px;display:flex;flex-direction:column;gap:1px}
+.sb-btn{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;border:none;background:none;color:var(--muted);cursor:pointer;font-size:13px;font-weight:500;width:100%;text-align:left;transition:.12s;white-space:nowrap}
+.sb-btn:hover{color:#fff;background:rgba(255,255,255,.05)}
+.sb-btn.on{color:#fff;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.18)}
+.sb-btn svg{flex-shrink:0;width:15px;height:15px;opacity:.8}
+.sb-btn.on svg{opacity:1}
+.sb-pill{margin-left:auto;font-size:9px;font-weight:700;padding:2px 6px;border-radius:9999px;background:rgba(34,197,94,.15);color:#4ade80}
+.sb-foot{margin-top:auto;padding:12px 16px;border-top:1px solid var(--bdr);font-size:11px;color:var(--dim)}
+.sb-foot span{color:#4ade80}
+
+/* MAIN */
+.main{margin-left:220px;flex:1;padding:26px 30px;overflow-x:hidden}
+.page{display:none}.page.on{display:block;animation:fi .18s ease}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* AUTH */
+.auth{position:fixed;inset:0;background:rgba(7,7,10,.96);z-index:999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.auth-box{background:var(--card);border:1px solid var(--bdr);border-radius:20px;padding:40px;width:400px;text-align:center}
+.auth-box h2{font-size:20px;font-weight:800;color:#fff;margin-bottom:6px}
+.auth-box p{font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.5}
+
+/* HEADER */
+.ph{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:22px}
+.ph h2{font-size:19px;font-weight:800;color:#fff}
+.ph p{font-size:12px;color:var(--muted);margin-top:3px}
+
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin-bottom:20px}
+.met{background:var(--card);border:1px solid var(--bdr);border-radius:13px;padding:16px 18px;transition:.15s;position:relative;overflow:hidden;cursor:default}
+.met:hover{border-color:var(--dim);transform:translateY(-1px)}
+.met-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.met-val{font-size:26px;font-weight:800;color:#fff;line-height:1;font-variant-numeric:tabular-nums}
+.met-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-top:5px;font-weight:600}
+.met-sub{font-size:10px;color:var(--dim);margin-top:3px}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:20px}
+.card-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:14px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:.12s;white-space:nowrap;font-family:inherit}
+.btn:active{transform:scale(.97)}
+.btn-blue{background:var(--blue);color:#fff}.btn-blue:hover{background:#2563eb}
+.btn-green{background:rgba(34,197,94,.13);color:#4ade80;border:1px solid rgba(34,197,94,.25)}.btn-green:hover{background:rgba(34,197,94,.22)}
+.btn-red{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2)}.btn-red:hover{background:rgba(239,68,68,.18)}
+.btn-ghost{background:rgba(255,255,255,.05);color:#a1a1aa;border:1px solid var(--bdr)}.btn-ghost:hover{color:#fff;background:rgba(255,255,255,.08)}
+.btn-sm{padding:5px 10px;font-size:11px;border-radius:7px}
+
+/* INPUTS */
+input,textarea,select{background:var(--surf);border:1px solid var(--bdr);border-radius:8px;color:var(--txt);padding:8px 12px;font-size:13px;width:100%;outline:none;transition:.12s;font-family:inherit}
+input:focus,textarea:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+label{font-size:10px;font-weight:700;color:var(--muted);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:9999px;border:1px solid transparent}
+.b-on{background:rgba(34,197,94,.1);color:#4ade80;border-color:rgba(34,197,94,.2)}
+.b-off{background:rgba(63,63,70,.15);color:var(--dim);border-color:rgba(63,63,70,.3)}
+.b-blue{background:rgba(59,130,246,.1);color:#60a5fa;border-color:rgba(59,130,246,.2)}
+.b-red{background:rgba(239,68,68,.08);color:#f87171;border-color:rgba(239,68,68,.18)}
+.b-amber{background:rgba(245,158,11,.1);color:#fbbf24;border-color:rgba(245,158,11,.2)}
+.b-purple{background:rgba(139,92,246,.1);color:#a78bfa;border-color:rgba(139,92,246,.2)}
+.b-req{background:#ef4444;color:#fff;border-color:#ef4444}
+
+/* TABLE */
+.tw{border:1px solid var(--bdr);border-radius:12px;overflow:hidden}
+.tw table{width:100%;border-collapse:collapse;font-size:12px}
+.tw th{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;padding:9px 13px;text-align:left;border-bottom:1px solid var(--bdr);background:var(--surf);white-space:nowrap}
+.tw td{padding:9px 13px;border-bottom:1px solid rgba(31,31,40,.8);vertical-align:middle}
+.tw tr:hover td{background:rgba(255,255,255,.015)}
+.tw tr:last-child td{border-bottom:none}
+
+/* PROGRESS BAR */
+.pb{height:4px;border-radius:9999px;background:var(--bdr);overflow:hidden}
+.pf{height:100%;border-radius:9999px;transition:.6s}
+
+/* CHARTS */
+.charts3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px;margin-bottom:20px}
+.charts2{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:20px}
+
+/* CLIENT CARD */
+.cc{background:var(--card);border:1px solid var(--bdr);border-radius:13px;overflow:hidden;cursor:pointer;transition:.15s}
+.cc:hover{border-color:var(--dim)}
+.cc.open{border-color:rgba(59,130,246,.4)}
+.cc-head{display:grid;grid-template-columns:12px 1fr auto;gap:14px;padding:14px 18px;align-items:center}
+.cc-body{display:none;border-top:1px solid var(--bdr);padding:16px 18px;background:rgba(7,7,10,.4);animation:fi .15s}
+.cc.open .cc-body{display:block}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid var(--bdr)}
+.dr{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(31,31,40,.6);font-size:12px}
+.dr:last-child{border-bottom:none}
+.dr span:first-child{color:var(--muted)}
+
+/* KEY / INVITE DISPLAY */
+.key-disp{background:var(--surf);border:2px solid rgba(59,130,246,.35);border-radius:11px;padding:14px;font-family:monospace;font-size:17px;font-weight:700;color:#60a5fa;letter-spacing:.1em;text-align:center;cursor:pointer;transition:.15s}
+.key-disp:hover{background:rgba(59,130,246,.05)}
+.inv-disp{background:var(--surf);border:1px solid rgba(34,197,94,.3);border-radius:10px;padding:12px;font-size:12px;color:#4ade80;word-break:break-all;cursor:pointer;font-family:monospace;transition:.15s}
+.inv-disp:hover{background:rgba(34,197,94,.04)}
+
+/* TOAST */
+#toasts{position:fixed;bottom:18px;right:18px;z-index:9999;display:flex;flex-direction:column;gap:7px;max-width:310px;pointer-events:none}
+.toast{background:#17171e;border:1px solid var(--bdr);border-radius:10px;padding:10px 14px;font-size:12px;display:flex;gap:8px;pointer-events:all;animation:fi .2s;box-shadow:0 6px 24px rgba(0,0,0,.5)}
+
+/* GAUGES */
+.gauges{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+.gauge label{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.gauge label em{color:#fff;font-style:normal}
+
+/* MINI ROW */
+.mini-row{display:grid;grid-template-columns:8px 1fr auto auto auto;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(31,31,40,.5)}
+.mini-row:last-child{border-bottom:none}
+
+/* UPDATE BADGE */
+.upd-ver{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(139,92,246,.08));border:1px solid rgba(59,130,246,.28);border-radius:11px;padding:10px 14px;margin-bottom:12px}
+
+/* DIVIDER */
+hr{border:none;border-top:1px solid var(--bdr);margin:16px 0}
+
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:4px}
+</style>
+</head>
+<body>
+
+<!-- ═══ AUTH OVERLAY ═══════════════════════════════════════════ -->
+<div class="auth" id="auth">
+  <div class="auth-box">
+    <div style="width:50px;height:50px;background:linear-gradient(135deg,#1e3a8a,#3b82f6);border-radius:14px;margin:0 auto 18px;display:flex;align-items:center;justify-content:center">
+      <svg width="24" height="24" fill="#fff" viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg>
+    </div>
+    <h2>Sentinel Admin</h2>
+    <p>Enter your admin key to access the super user panel.<br>The key is printed in your terminal on first launch.</p>
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <input type="password" id="akey" placeholder="Paste admin key…" onkeydown="if(event.key==='Enter')unlock()" style="flex:1">
+      <button class="btn btn-blue" onclick="unlock()">Unlock</button>
+    </div>
+    <p id="aerr" style="font-size:12px;color:#f87171;display:none">❌ Invalid key — check your terminal</p>
+  </div>
+</div>
+
+<!-- ═══ SIDEBAR ════════════════════════════════════════════════ -->
+<aside class="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-mark">
+      <svg width="16" height="16" fill="#fff" viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg>
+    </div>
+    <div><h1>Sentinel</h1><p>Super User Panel</p></div>
+  </div>
+
+  <div class="sb-section">Main</div>
+  <div class="sb-nav">
+    <button class="sb-btn on" id="nb-dash" onclick="go('dash')">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      Dashboard
+    </button>
+    <button class="sb-btn" id="nb-clients" onclick="go('clients')">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.87"/></svg>
+      Clients &amp; Diagnostics
+      <span class="sb-pill" id="online-pill" style="display:none">0</span>
+    </button>
+  </div>
+
+  <div class="sb-section">Beta Program</div>
+  <div class="sb-nav">
+    <button class="sb-btn" id="nb-keys" onclick="go('keys')">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="8" cy="15" r="5"/><path d="M21 2l-2 2m-4.5 4.5L21 2l-4.5 4.5 2 2"/></svg>
+      Keys &amp; Invite Links
+    </button>
+    <button class="sb-btn" id="nb-updates" onclick="go('updates')">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      Push Updates
+    </button>
+  </div>
+
+  <div class="sb-foot">
+    <div id="auth-status">Not signed in</div>
+    <div id="refresh-ts" style="margin-top:2px"></div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══════════════════════════════════════════════════ -->
+<main class="main">
+
+<!-- ════ DASHBOARD ════ -->
+<div class="page on" id="page-dash">
+  <div class="ph">
+    <div><h2>Fleet Dashboard</h2><p>Live telemetry — auto-refreshes every 30s</p></div>
+    <button class="btn btn-ghost btn-sm" onclick="loadDash()">↻ Refresh Now</button>
+  </div>
+
+  <!-- Metrics -->
+  <div class="metrics">
+    <div class="met"><div class="met-ico" style="background:rgba(34,197,94,.1)"><svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="#4ade80" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="met-val" id="m-online" style="color:#4ade80">—</div><div class="met-lbl">Online Now</div><div class="met-sub" id="m-total"></div></div>
+    <div class="met"><div class="met-ico" style="background:rgba(239,68,68,.1)"><svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="#f87171" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="met-val" id="m-threats" style="color:#f87171">—</div><div class="met-lbl">Threats Found</div><div class="met-sub">fleet total</div></div>
+    <div class="met"><div class="met-ico" style="background:rgba(59,130,246,.1)"><svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="#60a5fa" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="met-val" id="m-scanned">—</div><div class="met-lbl">Files Scanned</div><div class="met-sub">combined</div></div>
+    <div class="met"><div class="met-ico" style="background:rgba(245,158,11,.1)"><svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="#fbbf24" stroke-width="2.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div><div class="met-val" id="m-quar" style="color:#fbbf24">—</div><div class="met-lbl">Quarantined</div><div class="met-sub">files isolated</div></div>
+    <div class="met"><div class="met-ico" style="background:rgba(139,92,246,.1)"><svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="#a78bfa" stroke-width="2.5"><circle cx="8" cy="15" r="5"/><path d="M21 2l-2 2m-4.5 4.5L21 2l-4.5 4.5 2 2"/></svg></div><div class="met-val" id="m-keys" style="color:#a78bfa">—</div><div class="met-lbl">Beta Keys Active</div><div class="met-sub" id="m-acts"></div></div>
+    <div class="met"><div class="met-ico" style="background:rgba(6,182,212,.1)"><svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="#22d3ee" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="met-val" id="m-rt" style="color:#22d3ee">—</div><div class="met-lbl">Realtime On</div><div class="met-sub">live protection</div></div>
+  </div>
+
+  <!-- Charts row -->
+  <div class="charts3">
+    <div class="card"><div class="card-title">Online / Offline</div><canvas id="ch-status" height="200"></canvas></div>
+    <div class="card"><div class="card-title">Platform Breakdown</div><canvas id="ch-platform" height="200"></canvas></div>
+    <div class="card"><div class="card-title">Version Distribution</div><canvas id="ch-version" height="200"></canvas></div>
+  </div>
+
+  <!-- Resource gauges -->
+  <div class="card" style="margin-bottom:18px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:14px"><span style="font-size:13px;font-weight:700;color:#fff">Fleet Average Resources</span><span style="font-size:11px;color:var(--muted)">averaged across all connected clients</span></div>
+    <div class="gauges">
+      <div class="gauge"><label>CPU <em id="gv-cpu">—</em></label><div class="pb"><div class="pf" id="gf-cpu" style="width:0%;background:var(--blue)"></div></div></div>
+      <div class="gauge"><label>Memory <em id="gv-mem">—</em></label><div class="pb"><div class="pf" id="gf-mem" style="width:0%;background:var(--purple)"></div></div></div>
+      <div class="gauge"><label>Disk <em id="gv-disk">—</em></label><div class="pb"><div class="pf" id="gf-disk" style="width:0%;background:var(--amber)"></div></div></div>
+    </div>
+  </div>
+
+  <!-- Recent clients mini list -->
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <span style="font-size:13px;font-weight:700;color:#fff">Recent Clients</span>
+      <button class="btn btn-ghost btn-sm" onclick="go('clients')">View all →</button>
+    </div>
+    <div id="mini-list"><p style="font-size:13px;color:var(--muted)">Loading…</p></div>
+  </div>
+</div>
+
+<!-- ════ CLIENTS ════ -->
+<div class="page" id="page-clients">
+  <div class="ph">
+    <div><h2>Clients &amp; Diagnostics</h2><p>Click any client to expand full system diagnostics</p></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <input placeholder="🔍 Search hostname, IP, key…" id="csrch" oninput="filterC()" style="width:230px">
+      <select id="cfilt" onchange="filterC()" style="width:130px">
+        <option value="all">All clients</option>
+        <option value="online">Online only</option>
+        <option value="offline">Offline only</option>
+      </select>
+      <button class="btn btn-ghost btn-sm" onclick="loadClients()">↻</button>
+    </div>
+  </div>
+  <div id="clist" style="display:grid;gap:9px"></div>
+  <div id="cempty" style="display:none;text-align:center;padding:60px;color:var(--muted);font-size:14px">No clients found</div>
+</div>
+
+<!-- ════ KEYS & INVITES ════ -->
+<div class="page" id="page-keys">
+  <div class="ph">
+    <div><h2>Beta Keys &amp; Invite Links</h2><p>Generate keys, send invite links — testers click the link to get setup instructions</p></div>
+  </div>
+
+  <!-- Generator -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-title" style="display:flex;align-items:center;gap:6px">
+      <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="var(--blue)" stroke-width="2.5"><circle cx="8" cy="15" r="5"/><path d="M21 2l-2 2m-4.5 4.5L21 2l-4.5 4.5 2 2"/></svg>
+      Generate New Beta Key
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 140px 1fr auto;gap:10px;align-items:end">
+      <div><label>Tester Name / Label</label><input id="kl" placeholder="e.g. John Doe"></div>
+      <div><label>Max Devices</label><input id="km" type="number" value="1" min="1" max="20"></div>
+      <div><label>Your Admin Server URL (used in invite link)</label><input id="kurl" placeholder="http://YOUR_LAN_IP:18082"></div>
+      <button class="btn btn-blue" onclick="genKey()" style="margin-top:18px">+ Generate</button>
+    </div>
+
+    <div id="kresult" style="display:none;margin-top:18px">
+      <hr>
+      <p style="font-size:12px;color:#4ade80;font-weight:600;margin-bottom:12px">✓ Key generated — share either of these with your tester:</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div>
+          <label>Raw Beta Key</label>
+          <div class="key-disp" id="kraw" onclick="cp(this.textContent.trim(),'Key')"></div>
+          <p style="font-size:11px;color:var(--muted);margin-top:6px">Click to copy · Entered manually in Settings → Beta Program</p>
+        </div>
+        <div>
+          <label>🔗 Invite Link (recommended)</label>
+          <div class="inv-disp" id="kinv" onclick="cp(this.textContent.trim(),'Invite link')"></div>
+          <p style="font-size:11px;color:var(--muted);margin-top:6px">Click to copy · Opens a setup page with instructions for the tester</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn btn-green btn-sm" onclick="cp(document.getElementById('kraw').textContent.trim(),'Key')">📋 Copy Key</button>
+        <button class="btn btn-green btn-sm" onclick="cp(document.getElementById('kinv').textContent.trim(),'Invite link')">🔗 Copy Invite Link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter -->
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <input placeholder="🔍 Search…" id="ksrch" oninput="filterK()" style="width:220px">
+    <select id="kfilt" onchange="filterK()" style="width:130px">
+      <option value="all">All keys</option>
+      <option value="active">Active</option>
+      <option value="revoked">Revoked</option>
+    </select>
+  </div>
+
+  <div class="tw">
+    <table><thead><tr>
+      <th>Beta Key</th><th>Label</th><th>Activations</th><th>Status</th><th>Created</th><th>Invite Link</th><th>Actions</th>
+    </tr></thead><tbody id="ktb"></tbody></table>
+  </div>
+</div>
+
+<!-- ════ PUSH UPDATES ════ -->
+<div class="page" id="page-updates">
+  <div class="ph">
+    <div><h2>Push Updates</h2><p>Publish a release — all beta clients are notified within 60 seconds via heartbeat</p></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 350px;gap:18px;align-items:start">
+    <!-- Publish form -->
+    <div class="card">
+      <div class="card-title">Publish New Release</div>
+      <div style="display:grid;gap:13px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div><label>Version Number</label><input id="uver" placeholder="1.2.0"></div>
+          <div><label>Download URL</label><input id="uurl" placeholder="https://github.com/…/releases/download/…"></div>
+        </div>
+        <div><label>Release Notes (shown in-app to testers)</label><textarea id="unotes" rows="6" placeholder="• Fixed crash during deep scan&#10;• Improved realtime detection speed&#10;• New quarantine manager UI&#10;• Better memory usage"></textarea></div>
+
+        <div style="display:flex;gap:12px;padding:13px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.15);border-radius:10px">
+          <input type="checkbox" id="ureq" style="width:16px;height:16px;accent-color:#ef4444;flex-shrink:0;margin-top:2px">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:3px">⚠ Force Update (Required)</div>
+            <div style="font-size:11px;color:var(--muted);line-height:1.5">Users cannot dismiss this notification. The update button is shown prominently. Use only for critical security patches.</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-blue" onclick="pubUpdate()">🚀 Publish to All Beta Clients</button>
+          <button class="btn btn-red btn-sm" id="clrbtn" style="display:none" onclick="clrUpdate()">✕ Clear Update</button>
+        </div>
+        <div id="umsg" style="display:none;font-size:12px;padding:10px 13px;border-radius:8px"></div>
+      </div>
+    </div>
+
+    <!-- Right column -->
+    <div style="display:grid;gap:14px">
+      <!-- Currently live -->
+      <div class="card">
+        <div class="card-title">Currently Published</div>
+        <div id="cur-upd"><p style="font-size:13px;color:var(--muted)">No update published yet.</p></div>
+      </div>
+      <!-- Version coverage chart -->
+      <div class="card">
+        <div class="card-title">Client Version Coverage</div>
+        <canvas id="ch-vercover" height="160"></canvas>
+      </div>
+      <!-- Who needs update -->
+      <div class="card">
+        <div class="card-title">Clients Needing Update</div>
+        <div id="needs-upd"><p style="font-size:12px;color:var(--muted)">Publish a release to see who needs it.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- ═══ SETUP/INVITE LANDING (shown when ?key= in URL) ════════ -->
+<div id="setup-ov" style="display:none;position:fixed;inset:0;background:#07070a;z-index:999;align-items:center;justify-content:center">
+  <div style="background:var(--card);border:1px solid var(--bdr);border-radius:20px;padding:42px;max-width:480px;width:90%;text-align:center">
+    <div style="width:50px;height:50px;background:linear-gradient(135deg,#1e3a8a,#3b82f6);border-radius:14px;margin:0 auto 18px;display:flex;align-items:center;justify-content:center">
+      <svg width="24" height="24" fill="#fff" viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg>
+    </div>
+    <h2 style="font-size:22px;font-weight:800;color:#fff;margin-bottom:8px">You're Invited to Sentinel Beta</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.6">Your beta access key is below. Copy it and follow the steps to activate.</p>
+    <div id="setup-key" style="background:var(--surf);border:2px solid rgba(59,130,246,.4);border-radius:12px;padding:16px;font-family:monospace;font-size:19px;font-weight:700;color:#60a5fa;letter-spacing:.08em;margin-bottom:8px;cursor:pointer" onclick="copySetupKey()"></div>
+    <p style="font-size:12px;color:var(--dim);margin-bottom:20px">👆 Click to copy your key</p>
+    <div style="background:var(--surf);border:1px solid var(--bdr);border-radius:12px;padding:16px;text-align:left;font-size:13px;color:#a1a1aa;line-height:1.9">
+      <strong style="color:#fff;display:block;margin-bottom:8px">Setup Instructions:</strong>
+      1. Open <strong style="color:#fff">Sentinel Security Suite</strong><br>
+      2. Go to <strong style="color:#fff">Settings → Beta Program</strong><br>
+      3. Enter Admin URL: <code id="setup-url" style="color:#60a5fa;font-size:11px"></code><br>
+      4. Paste your beta key → click <strong style="color:#fff">Activate Beta Access</strong>
+    </div>
+    <a href="/admin" style="display:inline-block;margin-top:18px;font-size:12px;color:var(--dim)">← Admin Panel</a>
+  </div>
+</div>
+
+<!-- Toasts -->
+<div id="toasts"></div>
+
+<script>
+const B = window.location.origin;
+let _k = localStorage.getItem('_sak') || '';
+let _AC = [], _AK = {}, _CH = {}, _nk = '', _ni = '', _exp = null;
+
+Chart.defaults.color = '#52525b';
+Chart.defaults.borderColor = '#1f1f28';
+const PAL = ['#3b82f6','#8b5cf6','#22c55e','#f59e0b','#ef4444','#06b6d4','#ec4899','#84cc16'];
+const cols = n => Array.from({length:n}, (_,i) => PAL[i % PAL.length]);
+
+function doughnut(id, labels, values) {
+  const c = document.getElementById(id); if(!c) return;
+  if(_CH[id]) _CH[id].destroy();
+  _CH[id] = new Chart(c, {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data: values, backgroundColor: cols(values.length), borderWidth: 0, hoverOffset: 5 }] },
+    options: { cutout:'68%', plugins:{ legend:{ position:'bottom', labels:{ boxWidth:9, padding:10, font:{size:10} } } }, animation:{ duration:500 } }
+  });
+}
+
+// ── Auth ─────────────────────────────────────────────
+async function unlock() {
+  const k = document.getElementById('akey').value.trim();
+  try {
+    const r = await fetch(B + '/admin/stats', { headers: { 'X-Admin-Key': k } });
+    if(r.status === 403) throw 0;
+    _k = k; localStorage.setItem('_sak', _k);
+    document.getElementById('auth').style.display = 'none';
+    document.getElementById('auth-status').innerHTML = '<span>🔓 Authenticated</span>';
+    boot();
+  } catch(e) { document.getElementById('aerr').style.display = 'block'; }
+}
+
+async function api(path, opts = {}) {
+  const r = await fetch(B + path, {
+    ...opts,
+    headers: { 'X-Admin-Key': _k, 'Content-Type': 'application/json', ...(opts.headers||{}) },
+    body: opts.body ? JSON.stringify(opts.body) : undefined,
+  });
+  if(r.status === 403) throw new Error('403');
+  return r.json();
+}
+
+// ── Nav ───────────────────────────────────────────────
+function go(name) {
+  document.querySelectorAll('.page').forEach(e => e.classList.remove('on'));
+  document.querySelectorAll('.sb-btn').forEach(e => e.classList.remove('on'));
+  document.getElementById('page-' + name).classList.add('on');
+  document.getElementById('nb-' + name).classList.add('on');
+  if(name === 'dash') loadDash();
+  if(name === 'clients') loadClients();
+  if(name === 'keys') loadKeys();
+  if(name === 'updates') { loadCurUpdate(); loadVerCover(); loadNeedsUpd(); }
+}
+
+// ── Toast ─────────────────────────────────────────────
+function toast(msg, ok = true) {
+  const c = ok ? '#4ade80' : '#f87171';
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = `<span style="color:${c};font-size:14px">${ok?'✓':'✕'}</span><span style="color:#e4e4e7">${msg}</span>`;
+  document.getElementById('toasts').append(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+function cp(txt, lbl) { navigator.clipboard.writeText(txt); toast(lbl + ' copied!'); }
+
+// ── Counter animation ─────────────────────────────────
+function animN(el, n) {
+  if(!el) return;
+  const from = parseInt(el.textContent) || 0, dur = 600, t0 = performance.now();
+  const tick = t => { const p = Math.min((t-t0)/dur,1), e = 1-Math.pow(1-p,3); el.textContent = Math.round(from+(n-from)*e).toLocaleString(); if(p<1) requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+}
+
+// ── Gauge ─────────────────────────────────────────────
+function gauge(id, val) {
+  document.getElementById('gf-'+id).style.width = val + '%';
+  document.getElementById('gf-'+id).style.background = val>85?'#ef4444':val>65?'#f59e0b':id==='cpu'?'#3b82f6':id==='mem'?'#8b5cf6':'#f59e0b';
+  document.getElementById('gv-'+id).textContent = val.toFixed(1) + '%';
+}
+
+// ── Helpers ───────────────────────────────────────────
+const ago = iso => { if(!iso) return '—'; const d=(Date.now()-new Date(iso))/1000; if(d<60) return 'just now'; if(d<3600) return Math.floor(d/60)+'m ago'; if(d<86400) return Math.floor(d/3600)+'h ago'; return Math.floor(d/86400)+'d ago'; };
+const upt = s => { if(!s) return '—'; const h=Math.floor(s/3600),m=Math.floor(s%3600/60); return h?`${h}h ${m}m`:`${m}m`; };
+const pct = v => v!=null ? v.toFixed(1)+'%' : '—';
+const ccol = v => v>80?'#f87171':v>60?'#fbbf24':'#4ade80';
+
+// ── DASHBOARD ─────────────────────────────────────────
+async function loadDash() {
+  try {
+    const [s, cl] = await Promise.all([api('/admin/stats'), api('/admin/clients')]);
+    _AC = cl;
+    animN(document.getElementById('m-online'), s.online);
+    animN(document.getElementById('m-threats'), s.total_threats);
+    animN(document.getElementById('m-scanned'), s.total_scanned);
+    animN(document.getElementById('m-quar'), s.total_quarantine);
+    animN(document.getElementById('m-keys'), s.active_keys);
+    animN(document.getElementById('m-rt'), s.realtime_active);
+    document.getElementById('m-total').textContent = `of ${s.total_clients} registered`;
+    document.getElementById('m-acts').textContent = `${s.total_activations} activations`;
+    const op = document.getElementById('online-pill');
+    op.textContent = s.online; op.style.display = s.online > 0 ? 'inline-flex' : 'none';
+
+    doughnut('ch-status', ['Online','Offline'], [s.online||0, s.offline||0]);
+    doughnut('ch-platform', Object.keys(s.platforms), Object.values(s.platforms));
+    doughnut('ch-version', Object.keys(s.versions), Object.values(s.versions));
+    gauge('cpu', s.avg_cpu); gauge('mem', s.avg_mem); gauge('disk', s.avg_disk);
+
+    const ml = document.getElementById('mini-list');
+    if(!cl.length) { ml.innerHTML = '<p style="font-size:13px;color:var(--muted)">No clients connected yet. Generate a key and send an invite link to get started.</p>'; return; }
+    ml.innerHTML = cl.slice(0, 6).map(c => `
+      <div class="mini-row">
+        <span style="width:6px;height:6px;border-radius:9999px;display:block;background:${c.online?'#22c55e':'var(--dim)'};box-shadow:${c.online?'0 0 5px #22c55e':'none'}"></span>
+        <span style="font-size:13px;font-weight:600;color:#fff">${c.hostname||'Unknown'}</span>
+        <span style="font-size:11px;color:var(--muted)">${c.ip||''}</span>
+        <span style="font-size:11px;color:var(--muted)">${ago(c.last_seen)}</span>
+        <span class="badge ${c.threats_found>0?'b-red':'b-on'}">${c.threats_found>0?c.threats_found+' threats':'Clean'}</span>
+      </div>`).join('');
+
+    document.getElementById('refresh-ts').textContent = 'Updated ' + new Date().toLocaleTimeString();
+  } catch(e) { console.error(e); }
+}
+
+// ── CLIENTS ───────────────────────────────────────────
+async function loadClients() { try { _AC = await api('/admin/clients'); renderC(_AC); } catch(e){} }
+
+function filterC() {
+  const q = document.getElementById('csrch').value.toLowerCase();
+  const f = document.getElementById('cfilt').value;
+  renderC(_AC.filter(c => {
+    const m = !q || [c.hostname,c.ip,c.beta_key,c.platform].join(' ').toLowerCase().includes(q);
+    const s = f==='all'||(f==='online'&&c.online)||(f==='offline'&&!c.online);
+    return m && s;
+  }));
+}
+
+function renderC(data) {
+  const list = document.getElementById('clist'), empty = document.getElementById('cempty');
+  if(!data.length) { list.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display = 'none';
+  list.innerHTML = data.map((c, i) => `
+    <div class="cc ${_exp===i?'open':''}" id="cc${i}">
+      <div class="cc-head" onclick="tog(${i})">
+        <span style="width:10px;height:10px;border-radius:9999px;display:block;background:${c.online?'#22c55e':'var(--dim)'};box-shadow:${c.online?'0 0 7px #22c55e':'none'};flex-shrink:0"></span>
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:7px">
+            <span style="font-size:15px;font-weight:700;color:#fff">${c.hostname||'Unknown'}</span>
+            <span style="font-size:11px;color:var(--muted)">${c.ip||''}</span>
+            ${c.version ? `<span class="badge b-blue">v${c.version}</span>` : ''}
+            ${c.threats_found>0 ? `<span class="badge b-red">⚠ ${c.threats_found} threats</span>` : '<span class="badge b-on">✓ Clean</span>'}
+            ${c.realtime_active ? '<span class="badge b-purple">● Realtime</span>' : ''}
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <span class="chip" style="color:${ccol(c.cpu_percent)}">CPU ${pct(c.cpu_percent)}</span>
+            <span class="chip">RAM ${pct(c.memory_percent)}</span>
+            <span class="chip">Disk ${pct(c.disk_percent)}</span>
+            <span class="chip">⏱ ${upt(c.uptime_seconds)}</span>
+            <span class="chip">📂 ${(c.files_scanned||0).toLocaleString()} scanned</span>
+            <span class="chip">🔒 ${c.quarantine_count??0} quarantined</span>
+          </div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">${ago(c.last_seen)}</div>
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="var(--dim)" stroke-width="2" style="transition:.2s;transform:${_exp===i?'rotate(180deg)':''}"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="cc-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px">
+          <div>
+            <p style="font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">Identity</p>
+            ${dr('Status', c.online?'<span class="badge b-on">● Online</span>':'<span class="badge b-off">○ Offline</span>')}
+            ${dr('Hostname', c.hostname||'—')}
+            ${dr('IP Address', c.ip||'—')}
+            ${dr('Platform', `<span style="font-size:10px;max-width:140px;display:block;text-align:right">${(c.platform||'—').substring(0,40)}</span>`)}
+            ${dr('Version', c.version||'—')}
+            ${dr('Beta Key', `<span style="font-family:monospace;font-size:10px;color:#a78bfa">${c.beta_key||'—'}</span>`)}
+          </div>
+          <div>
+            <p style="font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">Resources</p>
+            ${dr('CPU', `<span style="color:${ccol(c.cpu_percent)};font-weight:700">${pct(c.cpu_percent)}</span>`)}
+            ${dr('Memory', pct(c.memory_percent))}
+            ${dr('Disk', pct(c.disk_percent))}
+            ${dr('Uptime', upt(c.uptime_seconds))}
+            ${dr('Realtime', c.realtime_active?'<span class="badge b-on">Active</span>':'<span class="badge b-off">Off</span>')}
+          </div>
+          <div>
+            <p style="font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">Scan Stats</p>
+            ${dr('Threats Found', `<span style="color:${c.threats_found>0?'#f87171':'#4ade80'};font-weight:700">${c.threats_found??0}</span>`)}
+            ${dr('Files Scanned', (c.files_scanned||0).toLocaleString())}
+            ${dr('Quarantined', c.quarantine_count??0)}
+            ${dr('First Seen', c.first_seen?new Date(c.first_seen).toLocaleString():'—')}
+            ${dr('Last Seen', c.last_seen?new Date(c.last_seen).toLocaleString():'—')}
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function tog(i) { _exp = _exp===i ? null : i; filterC(); }
+function dr(l, v) { return `<div class="dr"><span>${l}</span><span>${v}</span></div>`; }
+
+// ── KEYS ─────────────────────────────────────────────
+async function loadKeys() { try { _AK = await api('/admin/keys'); renderK(_AK); } catch(e){} }
+
+function filterK() {
+  const q = document.getElementById('ksrch').value.toLowerCase();
+  const f = document.getElementById('kfilt').value;
+  const out = {};
+  Object.entries(_AK).forEach(([k,v]) => {
+    const m = !q || k.toLowerCase().includes(q) || (v.label||'').toLowerCase().includes(q);
+    const s = f==='all' || (f==='active'&&v.active) || (f==='revoked'&&!v.active);
+    if(m&&s) out[k] = v;
+  });
+  renderK(out);
+}
+
+function renderK(data) {
+  const tb = document.getElementById('ktb');
+  const entries = Object.entries(data);
+  if(!entries.length) { tb.innerHTML='<tr><td colspan="7" style="text-align:center;padding:36px;color:var(--muted)">No keys — generate one above</td></tr>'; return; }
+  const base = (document.getElementById('kurl').value.trim() || window.location.origin);
+  tb.innerHTML = entries.map(([k,v]) => {
+    const inv = `${base}/setup?key=${encodeURIComponent(k)}&url=${encodeURIComponent(base)}`;
+    return `<tr>
+      <td><span style="font-family:monospace;font-size:11px;font-weight:700;color:${v.active?'#60a5fa':'var(--dim)'}">${k}</span></td>
+      <td style="color:#a1a1aa">${v.label||'—'}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:7px">
+          <div class="pb" style="width:60px"><div class="pf" style="width:${Math.round(v.uses/Math.max(v.max_uses,1)*100)}%;background:${v.uses>=v.max_uses?'#ef4444':'#3b82f6'}"></div></div>
+          <span style="font-size:11px;color:var(--muted)">${v.uses}/${v.max_uses}</span>
+        </div>
+      </td>
+      <td><span class="badge ${v.active?'b-blue':'b-red'}">${v.active?'Active':'Revoked'}</span></td>
+      <td style="font-size:11px;color:var(--muted)">${v.created?new Date(v.created).toLocaleDateString():'—'}</td>
+      <td>${v.active?`<button class="btn btn-green btn-sm" onclick="cp('${inv}','Invite link')">🔗 Copy Link</button>`:'<span style="color:var(--dim);font-size:11px">—</span>'}</td>
+      <td><div style="display:flex;gap:4px">
+        <button class="btn btn-ghost btn-sm" onclick="cp('${k}','Key')">Copy Key</button>
+        ${v.active?`<button class="btn btn-red btn-sm" onclick="revokeK('${k}')">Revoke</button>`:''}
+        <button class="btn btn-red btn-sm" onclick="delK('${k}')">Del</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+async function genKey() {
+  const label = document.getElementById('kl').value.trim();
+  const max_uses = parseInt(document.getElementById('km').value)||1;
+  const base = (document.getElementById('kurl').value.trim() || window.location.origin);
+  try {
+    const d = await api('/admin/keys/generate', { method:'POST', body:{ label, max_uses } });
+    if(d.success) {
+      _nk = d.key;
+      _ni = `${base}/setup?key=${encodeURIComponent(d.key)}&url=${encodeURIComponent(base)}`;
+      document.getElementById('kraw').textContent = d.key;
+      document.getElementById('kinv').textContent = _ni;
+      document.getElementById('kresult').style.display = 'block';
+      document.getElementById('kl').value = '';
+      toast('Key generated! Copy the invite link to send to your tester.');
+      loadKeys();
+    }
+  } catch(e) { toast('Failed to generate key', false); }
+}
+
+async function revokeK(k) { if(!confirm('Revoke '+k+'?')) return; await api('/admin/keys/'+encodeURIComponent(k)+'/revoke',{method:'POST'}); toast('Key revoked', false); loadKeys(); }
+async function delK(k) { if(!confirm('Delete '+k+' permanently?')) return; await api('/admin/keys/'+encodeURIComponent(k)+'/delete',{method:'POST'}); toast('Key deleted'); loadKeys(); }
+
+// ── UPDATES ──────────────────────────────────────────
+async function loadCurUpdate() {
+  try {
+    const d = await api('/admin/updates');
+    const el = document.getElementById('cur-upd'), cb = document.getElementById('clrbtn');
+    if(!d.latest_version) { el.innerHTML='<p style="font-size:13px;color:var(--muted)">No update published yet.</p>'; cb.style.display='none'; return; }
+    cb.style.display='inline-flex';
+    el.innerHTML = `
+      <div class="upd-ver">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#60a5fa" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        <span style="font-size:19px;font-weight:800;color:#fff">v${d.latest_version}</span>
+        ${d.required?'<span class="badge b-req">REQUIRED</span>':'<span class="badge b-blue">optional</span>'}
+      </div>
+      ${d.download_url?`<a href="${d.download_url}" target="_blank" style="display:block;font-size:11px;color:var(--blue);margin-bottom:10px;word-break:break-all">${d.download_url}</a>`:''}
+      <pre style="font-size:12px;color:#a1a1aa;white-space:pre-wrap;font-family:inherit;line-height:1.6;margin-bottom:8px">${d.release_notes||'No release notes'}</pre>
+      <p style="font-size:10px;color:var(--dim)">Published ${d.published_at?new Date(d.published_at).toLocaleString():'—'}</p>`;
+  } catch(e) {}
+}
+
+async function loadVerCover() { try { const s=await api('/admin/stats'); doughnut('ch-vercover',Object.keys(s.versions),Object.values(s.versions)); } catch(e){} }
+
+async function loadNeedsUpd() {
+  try {
+    const [upd, cl] = await Promise.all([api('/admin/updates'), api('/admin/clients')]);
+    const el = document.getElementById('needs-upd');
+    if(!upd.latest_version) { el.innerHTML='<p style="font-size:12px;color:var(--muted)">Publish a release first.</p>'; return; }
+    const behind = cl.filter(c => c.version && c.version !== upd.latest_version);
+    const unk = cl.filter(c => !c.version);
+    if(!behind.length && !unk.length) { el.innerHTML=`<p style="font-size:12px;color:#4ade80">✓ All ${cl.length} clients are on v${upd.latest_version}</p>`; return; }
+    el.innerHTML = [...behind,...unk].map(c=>`
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(31,31,40,.6);font-size:12px">
+        <span style="font-weight:600;color:#fff">${c.hostname||'Unknown'}</span>
+        <span style="color:var(--muted)">${c.version?'v'+c.version:'unknown'} → <span style="color:#60a5fa">v${upd.latest_version}</span></span>
+        <span class="badge ${c.online?'b-on':'b-off'}">${c.online?'Online':'Offline'}</span>
+      </div>`).join('');
+  } catch(e) {}
+}
+
+async function pubUpdate() {
+  const version=document.getElementById('uver').value.trim();
+  const download_url=document.getElementById('uurl').value.trim();
+  const release_notes=document.getElementById('unotes').value.trim();
+  const required=document.getElementById('ureq').checked;
+  const msg=document.getElementById('umsg');
+  if(!version) { setMsg(msg,'Version number is required',false); return; }
+  try {
+    const d=await api('/admin/updates/publish',{method:'POST',body:{version,download_url,release_notes,required}});
+    if(d.success) { setMsg(msg,'✓ v'+version+' published! Clients notified within 60s.',true); toast('Update v'+version+' pushed to all clients!'); loadCurUpdate(); loadVerCover(); loadNeedsUpd(); }
+  } catch(e) { setMsg(msg,'Failed to publish',false); }
+}
+
+async function clrUpdate() {
+  if(!confirm('Remove published update? Clients will stop seeing the notification.')) return;
+  await api('/admin/updates/publish',{method:'POST',body:{version:'',download_url:'',release_notes:'',required:false}});
+  toast('Update cleared'); loadCurUpdate(); loadNeedsUpd();
+}
+
+function setMsg(el,txt,ok) {
+  el.style.display='block'; el.textContent=txt;
+  el.style.background=ok?'rgba(34,197,94,.08)':'rgba(239,68,68,.08)';
+  el.style.color=ok?'#4ade80':'#f87171';
+  el.style.border='1px solid '+(ok?'rgba(34,197,94,.2)':'rgba(239,68,68,.2)');
+}
+
+// ── Setup/invite landing page ─────────────────────────
+(function() {
+  const p = new URLSearchParams(location.search);
+  if(!p.has('key')) return;
+  const key = p.get('key'), url = p.get('url') || '';
+  document.getElementById('setup-key').textContent = key;
+  document.getElementById('setup-url').textContent = url;
+  window._sk = key;
+  const ov = document.getElementById('setup-ov');
+  ov.style.display = 'flex';
+})();
+
+function copySetupKey() {
+  navigator.clipboard.writeText(window._sk||'');
+  const el = document.getElementById('setup-key');
+  const orig = el.textContent;
+  el.textContent = '✓ Copied!'; el.style.color='#4ade80';
+  setTimeout(() => { el.textContent=orig; el.style.color='#60a5fa'; }, 2000);
+}
+
+// ── Boot ──────────────────────────────────────────────
+function boot() {
+  loadDash();
+  setInterval(loadDash, 30000);
+  setInterval(() => { if(document.getElementById('page-clients').classList.contains('on')) loadClients(); }, 15000);
+}
+
+if(_k) {
+  document.getElementById('auth').style.display = 'none';
+  document.getElementById('auth-status').innerHTML = '<span>🔓 Authenticated</span>';
+  boot();
+} else {
+  setTimeout(() => document.getElementById('akey').focus(), 100);
+}
+</script>
+</body>
+</html>
