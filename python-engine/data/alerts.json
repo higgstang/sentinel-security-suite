@@ -1,5 +1,69 @@
 [
   {
+    "id": 1783636433164,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_emissary.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_emissary.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T22:33:53.159637Z",
+      "file_size": 2147,
+      "file_hash": "62b981fc31c7a9c5564d5129473e7bd9c63b076fb5f999f6d9d640bf0315f363"
+    },
+    "timestamp": "2026-07-09T22:33:53.164505Z",
+    "read": false
+  },
+  {
+    "id": 1783636337062,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_lazarus_dec17.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_lazarus_dec17.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T22:32:17.055969Z",
+      "file_size": 3961,
+      "file_hash": "0311cd0d40ce532c52cb2017d990971ae7e268b0ad0ec88f102f6bffe38e2302"
+    },
+    "timestamp": "2026-07-09T22:32:17.062740Z",
+    "read": false
+  },
+  {
+    "id": 1783636336298,
+    "type": "malware",
+    "message": "Real-time detection: Hex-encoded payload in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_mal_ru_snake_may23.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_mal_ru_snake_may23.yar",
+      "threat_type": "suspicious_content",
+      "description": "Hex-encoded payload",
+      "severity": "medium",
+      "timestamp": "2026-07-09T22:32:16.281709Z",
+      "file_size": 3437,
+      "file_hash": "c99614b2e9d49c0cbeb5f4ba84114cfb43ee969bfaf8218a48b9534e279a2b36"
+    },
+    "timestamp": "2026-07-09T22:32:16.299055Z",
+    "read": false
+  },
+  {
+    "id": 1783635860650,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_codoso.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_codoso.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T22:24:20.649843Z",
+      "file_size": 16668,
+      "file_hash": "bf60bfbf97dc4af23ccbe460a377f89a521c14fd28d6b6b014a58ab0dd074641"
+    },
+    "timestamp": "2026-07-09T22:24:20.650845Z",
+    "read": false
+  },
+  {
     "id": 1783635745165,
     "type": "malware",
     "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_wmi_implant.yar",

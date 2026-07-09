@@ -51,6 +51,14 @@
       "hardenedRuntime": false,
       "gatekeeperAssess": false
     },
+    "pkg": {
+      "installLocation": "/Applications",
+      "isRelocatable": false,
+      "isVersionChecked": false,
+      "hasWelcome": false,
+      "hasLicense": false,
+      "hasConclusion": false
+    },
     "win": {
       "target": "nsis",
       "icon": "assets/icon.png"
