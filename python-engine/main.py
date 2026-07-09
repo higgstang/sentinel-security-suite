@@ -442,6 +442,17 @@ def api_all_alerts():
     return jsonify(all_alerts)
 
 
+@app.route("/api/alerts/history")
+def api_alerts_history():
+    """Return all archived alerts from previous sessions."""
+    history_file = os.path.join(data_dir, "alert_history.json")
+    try:
+        with open(history_file, encoding="utf-8") as f:
+            return jsonify(json.load(f))
+    except Exception:
+        return jsonify([])
+
+
 @app.route("/api/security/alerts/clear", methods=["POST"])
 def api_clear_alerts():
     """Clear all alerts: threat scanner results and network security alerts."""
@@ -1199,6 +1210,47 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=18081)
     args = parser.parse_args()
+
+    # Archive alerts from previous session into history log, then start clean
+    _history_file = os.path.join(data_dir, "alert_history.json")
+    try:
+        import json as _json
+        from datetime import datetime as _dt
+
+        # Build full alert snapshot from last session
+        _old_alerts = []
+        for r in file_scanner.results:
+            d = r.to_dict()
+            _old_alerts.append({"source": "scanner", "session_end": _dt.now().isoformat(), **d})
+        try:
+            with open(scanner.alerts_file, encoding="utf-8") as _f:
+                _net = _json.load(_f)
+            for a in (_net or []):
+                _old_alerts.append({"source": "network", "session_end": _dt.now().isoformat(), **a})
+        except Exception:
+            pass
+
+        if _old_alerts:
+            # Append to history
+            _existing = []
+            if os.path.exists(_history_file):
+                try:
+                    with open(_history_file, encoding="utf-8") as _f:
+                        _existing = _json.load(_f)
+                except Exception:
+                    pass
+            _existing.extend(_old_alerts)
+            # Keep last 10,000 entries
+            _existing = _existing[-10000:]
+            with open(_history_file, "w", encoding="utf-8") as _f:
+                _json.dump(_existing, _f, indent=2)
+
+        # Now clear active queues for fresh session
+        file_scanner.results.clear()
+        with open(scanner.alerts_file, "w", encoding="utf-8") as _f:
+            _json.dump([], _f)
+    except Exception:
+        pass
 
     # Prime CPU sampler so non-blocking reads are accurate
     threading.Thread(target=_cpu_sampler, daemon=True).start()
