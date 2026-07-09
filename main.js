@@ -144,10 +144,14 @@ async function startPythonEngine(isRestart = false) {
     if (process.platform !== 'win32' && !engineEnv.PATH) {
         engineEnv.PATH = '/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/usr/local/bin';
     }
+    const engineCwd = app.isPackaged
+        ? path.join(process.resourcesPath, 'python-engine')
+        : path.join(__dirname, 'python-engine');
+
     pythonProcess = spawn(exe, [...args, '--port', String(enginePort)], {
         stdio: ['ignore', 'pipe', 'pipe'],
         env: engineEnv,
-        cwd: path.join(__dirname, 'python-engine'),
+        cwd: fs.existsSync(engineCwd) ? engineCwd : path.dirname(exe),
     });
 
     pythonProcess.stdout.on('data', (data) => {
