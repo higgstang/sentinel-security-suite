@@ -79,10 +79,16 @@ jobs:
         run: npm run build-mac
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_IDENTITY_AUTO_DISCOVERY: false
 
-      - name: Strip quarantine attributes from built app
+      - name: Re-sign app ad-hoc inside release folder
         run: |
-          find release/mac-arm64 -name "*.app" -exec xattr -cr {} \; 2>/dev/null || true
+          for APP in $(find release -name "*.app" -maxdepth 4); do
+            echo "Re-signing: $APP"
+            codesign --remove-signature "$APP" 2>/dev/null || true
+            codesign --force --deep --sign - "$APP" 2>/dev/null || true
+            xattr -cr "$APP" 2>/dev/null || true
+          done
           find release -name "*.dmg" -exec xattr -cr {} \; 2>/dev/null || true
           find release -name "*.pkg" -exec xattr -cr {} \; 2>/dev/null || true
 

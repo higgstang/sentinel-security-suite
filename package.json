@@ -57,7 +57,8 @@
       "isVersionChecked": false,
       "allowAnywhere": false,
       "allowCurrentUserHome": false,
-      "allowRootDirectory": true
+      "allowRootDirectory": true,
+      "scripts": "build/pkg-scripts"
     },
     "win": {
       "target": "nsis",

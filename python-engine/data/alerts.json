@@ -1,5 +1,261 @@
 [
   {
+    "id": 1783637981849,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd, suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_olympic_destroyer.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_olympic_destroyer.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd, suspicious_wscript",
+      "severity": "high",
+      "timestamp": "2026-07-09T22:59:41.848033Z",
+      "file_size": 2727,
+      "file_hash": "90fe5b490a7aaf96b6cba58dfb0b627c8b3905888141f3abc3ca0177f986bbf2"
+    },
+    "timestamp": "2026-07-09T22:59:41.849938Z",
+    "read": false
+  },
+  {
+    "id": 1783637861352,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/crime_fireball.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/crime_fireball.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T22:57:41.348270Z",
+      "file_size": 8076,
+      "file_hash": "13bca5ff8df2da1aedf361c1fbafaa791a2354e19253b7aa4331c0e2d3a6aa2a"
+    },
+    "timestamp": "2026-07-09T22:57:41.352796Z",
+    "read": false
+  },
+  {
+    "id": 1783637861305,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_case_anomalies.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_case_anomalies.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_wscript",
+      "severity": "high",
+      "timestamp": "2026-07-09T22:57:41.302247Z",
+      "file_size": 3210,
+      "file_hash": "445202a9476da9ebe0844fa12f5352de0b7d4fb1b364cbcebb61cf6d0b869c68"
+    },
+    "timestamp": "2026-07-09T22:57:41.305854Z",
+    "read": false
+  },
+  {
+    "id": 1783637860781,
+    "type": "malware",
+    "message": "Real-time detection: Process memory writing in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_Excel4Macro_Sharpshooter.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_Excel4Macro_Sharpshooter.yar",
+      "threat_type": "suspicious_content",
+      "description": "Process memory writing",
+      "severity": "medium",
+      "timestamp": "2026-07-09T22:57:40.776772Z",
+      "file_size": 3080,
+      "file_hash": "364a8fb68cfa56ad4f9e37ab846017c86ba73a020b7dd38da2057e5766d33b39"
+    },
+    "timestamp": "2026-07-09T22:57:40.781574Z",
+    "read": false
+  },
+  {
+    "id": 1783637744097,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_rokrat.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_rokrat.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_wscript",
+      "severity": "high",
+      "timestamp": "2026-07-09T22:55:44.093202Z",
+      "file_size": 4961,
+      "file_hash": "3b9f91888862f6c1a9db77716c6a654fc964cc1d7924d9979b3e23ae406d4bb1"
+    },
+    "timestamp": "2026-07-09T22:55:44.097762Z",
+    "read": false
+  },
+  {
+    "id": 1783637686463,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/crime_malware_generic.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/crime_malware_generic.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T22:54:46.458251Z",
+      "file_size": 4338,
+      "file_hash": "93b1c9d8e841b27018547854dd683d04ddb507fe95aebfcf438e40fab2b74b17"
+    },
+    "timestamp": "2026-07-09T22:54:46.463476Z",
+    "read": false
+  },
+  {
+    "id": 1783637672796,
+    "type": "malware",
+    "message": "Real-time detection: Hex-encoded payload in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_mal_ru_snake_may23.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_mal_ru_snake_may23.yar",
+      "threat_type": "suspicious_content",
+      "description": "Hex-encoded payload",
+      "severity": "medium",
+      "timestamp": "2026-07-09T22:54:32.751491Z",
+      "file_size": 3437,
+      "file_hash": "c99614b2e9d49c0cbeb5f4ba84114cfb43ee969bfaf8218a48b9534e279a2b36"
+    },
+    "timestamp": "2026-07-09T22:54:32.796485Z",
+    "read": false
+  },
+  {
+    "id": 1783637403995,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/exploit_cve_2017_8759.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/exploit_cve_2017_8759.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T22:50:03.994214Z",
+      "file_size": 4472,
+      "file_hash": "1ce5993e5f5761be414a5f7f7762a29d40ea9f705ea8e40e1dd3e4e9dac28fe3"
+    },
+    "timestamp": "2026-07-09T22:50:03.995835Z",
+    "read": false
+  },
+  {
+    "id": 1783637346679,
+    "type": "malware",
+    "message": "Real-time detection: Hex-encoded payload in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/crime_xbash.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/crime_xbash.yar",
+      "threat_type": "suspicious_content",
+      "description": "Hex-encoded payload",
+      "severity": "medium",
+      "timestamp": "2026-07-09T22:49:06.672409Z",
+      "file_size": 2837,
+      "file_hash": "d10cbdb98a0fce77ecfbd603fd3d23489f1fe148554a67a9694c6a9fc7528fa0"
+    },
+    "timestamp": "2026-07-09T22:49:06.679343Z",
+    "read": false
+  },
+  {
+    "id": 1783637344355,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_ta17_318B.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_ta17_318B.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T22:49:04.354149Z",
+      "file_size": 2826,
+      "file_hash": "5318e3e1f73332e38d530524c21c85105b79ce24c2fb36ef0130d5b4f88848bd"
+    },
+    "timestamp": "2026-07-09T22:49:04.355071Z",
+    "read": false
+  },
+  {
+    "id": 1783637343920,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd, suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_apt34.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_apt34.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd, suspicious_wscript",
+      "severity": "high",
+      "timestamp": "2026-07-09T22:49:03.913761Z",
+      "file_size": 2767,
+      "file_hash": "3f123991bdee054f047c4a172517997cda71ceda34f19ce05503d17a6c0eb3c3"
+    },
+    "timestamp": "2026-07-09T22:49:03.920364Z",
+    "read": false
+  },
+  {
+    "id": 1783637273466,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_codoso.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_codoso.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T22:47:53.465418Z",
+      "file_size": 16668,
+      "file_hash": "bf60bfbf97dc4af23ccbe460a377f89a521c14fd28d6b6b014a58ab0dd074641"
+    },
+    "timestamp": "2026-07-09T22:47:53.466907Z",
+    "read": false
+  },
+  {
+    "id": 1783637179706,
+    "type": "malware",
+    "message": "Real-time detection: Process memory allocation in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_powershell_empire.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_powershell_empire.yar",
+      "threat_type": "suspicious_content",
+      "description": "Process memory allocation",
+      "severity": "medium",
+      "timestamp": "2026-07-09T22:46:19.692399Z",
+      "file_size": 9157,
+      "file_hash": "170c4342744d309da52948525222eee842502f15971a40bc47568929b8695294"
+    },
+    "timestamp": "2026-07-09T22:46:19.706496Z",
+    "read": false
+  },
+  {
+    "id": 1783637179583,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_wmi_implant.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_wmi_implant.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T22:46:19.575295Z",
+      "file_size": 1124,
+      "file_hash": "920b91a15d7e1dce78c56375ecea518649ae31ebe6ec4465f91c75a3444e8db7"
+    },
+    "timestamp": "2026-07-09T22:46:19.583890Z",
+    "read": false
+  },
+  {
+    "id": 1783637087070,
+    "type": "malware",
+    "message": "Real-time detection: JavaScript eval usage in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_aus_parl_compromise.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_aus_parl_compromise.yar",
+      "threat_type": "suspicious_content",
+      "description": "JavaScript eval usage",
+      "severity": "medium",
+      "timestamp": "2026-07-09T22:44:47.035597Z",
+      "file_size": 7619,
+      "file_hash": "089cb0db38080f8e5f00dfac7454f02163d1d07753162b37dbc41858867f2ded"
+    },
+    "timestamp": "2026-07-09T22:44:47.072156Z",
+    "read": false
+  },
+  {
+    "id": 1783636975272,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd, suspicious_wscript, ransomware_note_pattern in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/builtin.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/builtin.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd, suspicious_wscript, ransomware_note_pattern",
+      "severity": "high",
+      "timestamp": "2026-07-09T22:42:55.263048Z",
+      "file_size": 1046,
+      "file_hash": "6e73655939d74118215fe6b7fe3cd4ae3e9832fe54a24c802b63fe56ecb27754"
+    },
+    "timestamp": "2026-07-09T22:42:55.278380Z",
+    "read": false
+  },
+  {
     "id": 1783636874386,
     "type": "malware",
     "message": "Real-time detection: YARA match: suspicious_cmd, suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/crime_cobaltgang.yar",

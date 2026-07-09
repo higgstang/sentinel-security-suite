@@ -1,0 +1,9 @@
+#!/bin/bash
+# Remove broken signature and re-apply ad-hoc signature so app launches on macOS
+APP="/Applications/Sentinel Security Suite.app"
+if [ -d "$APP" ]; then
+  codesign --remove-signature "$APP" 2>/dev/null || true
+  codesign --force --deep --sign - "$APP" 2>/dev/null || true
+  xattr -cr "$APP" 2>/dev/null || true
+fi
+exit 0
