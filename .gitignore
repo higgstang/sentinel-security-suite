@@ -1,0 +1,7 @@
+node_modules/
+release/
+python-engine/build/
+python-engine/__pycache__/
+*.pyc
+*.pyo
+.DS_Store
