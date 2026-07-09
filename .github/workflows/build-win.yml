@@ -75,16 +75,24 @@ jobs:
       - name: Install Node dependencies
         run: npm install
 
-      - name: Build macOS DMG
+      - name: Build macOS DMG + PKG
         run: npm run build-mac
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload DMG artifact
+      - name: Strip quarantine attributes from built app
+        run: |
+          find release/mac-arm64 -name "*.app" -exec xattr -cr {} \; 2>/dev/null || true
+          find release -name "*.dmg" -exec xattr -cr {} \; 2>/dev/null || true
+          find release -name "*.pkg" -exec xattr -cr {} \; 2>/dev/null || true
+
+      - name: Upload Mac artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Sentinel-Mac-Installer
-          path: release/*.dmg
+          path: |
+            release/*.dmg
+            release/*.pkg
           retention-days: 30
 
   build-windows:

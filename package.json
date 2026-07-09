@@ -45,9 +45,11 @@
       }
     ],
     "mac": {
-      "target": "dmg",
+      "target": [{"target": "dmg", "arch": ["arm64"]}, {"target": "pkg", "arch": ["arm64"]}],
       "category": "public.app-category.utilities",
-      "icon": "assets/icon.png"
+      "icon": "assets/icon.png",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false
     },
     "win": {
       "target": "nsis",
