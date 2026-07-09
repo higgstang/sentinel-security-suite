@@ -42,6 +42,30 @@ jobs:
             python-engine/main.py
         shell: pwsh
 
+      - name: Download and bundle ClamAV portable
+        run: |
+          $clamUrl = "https://www.clamav.net/downloads/production/clamav-1.4.2.win.x64.zip"
+          $clamZip = "clamav.zip"
+          $clamDir = "python-engine/dist/clamav"
+          Write-Host "Downloading ClamAV..."
+          Invoke-WebRequest -Uri $clamUrl -OutFile $clamZip -UseBasicParsing
+          Write-Host "Extracting ClamAV..."
+          Expand-Archive -Path $clamZip -DestinationPath "clamav_tmp" -Force
+          $extracted = Get-ChildItem "clamav_tmp" -Directory | Select-Object -First 1
+          New-Item -ItemType Directory -Force -Path $clamDir | Out-Null
+          Copy-Item "$($extracted.FullName)\*" -Destination $clamDir -Recurse -Force
+          # Create minimal clamd.conf and freshclam.conf so ClamAV runs without a daemon
+          $confContent = "DatabaseDirectory $clamDir\database`r`nLogFile $clamDir\clam.log`r`nTempDir $env:TEMP"
+          New-Item -ItemType Directory -Force -Path "$clamDir\database" | Out-Null
+          $confContent | Out-File -FilePath "$clamDir\clamd.conf" -Encoding ASCII
+          "DatabaseDirectory $clamDir\database`r`nUpdateLogFile $clamDir\freshclam.log" | Out-File -FilePath "$clamDir\freshclam.conf" -Encoding ASCII
+          Write-Host "Downloading ClamAV signatures..."
+          & "$clamDir\freshclam.exe" --config-file="$clamDir\freshclam.conf" 2>&1 | Write-Host
+          Write-Host "ClamAV ready at $clamDir"
+          Get-ChildItem $clamDir
+        shell: pwsh
+        continue-on-error: true
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:

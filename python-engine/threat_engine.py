@@ -115,8 +115,13 @@ class FileScanner:
         self.clamav_available = self._check_clamav()
 
     def _find_clamav(self):
-        """Find clamscan executable in common locations."""
-        paths = ["clamscan", "clamscan.exe"]
+        """Find clamscan executable — bundled resources first, then system paths."""
+        import sys as _sys
+        # When packaged with PyInstaller, look next to the binary
+        _base = os.path.dirname(_sys.executable if getattr(_sys, "frozen", False) else os.path.abspath(__file__))
+        bundled_win = os.path.join(_base, "clamav", "clamscan.exe")
+        bundled_mac = os.path.join(_base, "clamav", "clamscan")
+        paths = [bundled_win, bundled_mac, "clamscan", "clamscan.exe"]
         common_paths = [
             "/opt/homebrew/bin/clamscan",
             "/usr/local/bin/clamscan",
@@ -179,9 +184,15 @@ class FileScanner:
         clamscan = self._find_clamav()
         if not clamscan:
             return None
+        cmd = [clamscan, "--no-summary", "--infected"]
+        # If using bundled ClamAV, point it at the bundled signature database
+        bundled_db = os.path.join(os.path.dirname(clamscan), "database")
+        if os.path.isdir(bundled_db):
+            cmd += ["--database", bundled_db]
+        cmd.append(path)
         try:
             result = subprocess.run(
-                [clamscan, "--no-summary", "--infected", path],
+                cmd,
                 capture_output=True,
                 text=True,
                 timeout=120,

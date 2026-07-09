@@ -34,6 +34,10 @@
         "from": "python-engine/dist/sentinel-engine.exe",
         "to": "python-engine/sentinel-engine.exe",
         "filter": ["*.exe"]
+      },
+      {
+        "from": "python-engine/dist/clamav",
+        "to": "python-engine/clamav"
       }
     ],
     "mac": {
