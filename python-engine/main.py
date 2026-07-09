@@ -44,9 +44,10 @@ else:
 os.makedirs(data_dir, exist_ok=True)
 scanner = SecurityScanner(data_dir=data_dir)
 
-_quarantine_dir = os.path.join(data_dir, "quarantine") if getattr(sys, 'frozen', False) else os.path.join(base_dir, "quarantine")
-file_scanner = FileScanner(quarantine_dir=_quarantine_dir, base_dir=base_dir)
-license_client = LicenseClient(base_dir=base_dir)
+_quarantine_dir = os.path.join(data_dir, "quarantine")
+_writable_base = data_dir if getattr(sys, 'frozen', False) else base_dir
+file_scanner = FileScanner(quarantine_dir=_quarantine_dir, base_dir=_writable_base)
+license_client = LicenseClient(base_dir=_writable_base)
 realtime_monitor = None
 
 # Active scan sessions keyed by scan_id
