@@ -116,12 +116,14 @@ class FileScanner:
 
     def _find_clamav(self):
         """Find clamscan executable in common locations."""
-        paths = ["clamscan"]
+        paths = ["clamscan", "clamscan.exe"]
         common_paths = [
             "/opt/homebrew/bin/clamscan",
             "/usr/local/bin/clamscan",
             "/opt/local/bin/clamscan",
             "/usr/bin/clamscan",
+            r"C:\Program Files\ClamAV\clamscan.exe",
+            r"C:\Program Files (x86)\ClamAV\clamscan.exe",
         ]
         paths.extend(common_paths)
         for c in paths:

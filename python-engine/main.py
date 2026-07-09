@@ -177,11 +177,15 @@ def get_size(bytes_value):
 def ping_host(host, timeout=1):
     """Return True if host responds to ping, else False."""
     try:
+        if platform.system() == "Windows":
+            cmd = ["ping", "-n", "1", "-w", str(timeout * 1000), str(host)]
+        else:
+            cmd = ["ping", "-c", "1", "-W", str(timeout), str(host)]
         result = subprocess.run(
-            ["ping", "-c", "1", "-W", str(timeout), str(host)],
+            cmd,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
-            timeout=timeout + 1,
+            timeout=timeout + 2,
         )
         return result.returncode == 0
     except Exception:
@@ -190,13 +194,8 @@ def ping_host(host, timeout=1):
 
 def get_public_ip():
     try:
-        result = subprocess.run(
-            ["curl", "-s", "https://api.ipify.org"],
-            capture_output=True,
-            text=True,
-            timeout=5,
-        )
-        return result.stdout.strip() if result.returncode == 0 else "Unknown"
+        import requests as _req
+        return _req.get("https://api.ipify.org", timeout=5).text.strip()
     except Exception:
         return "Unknown"
 

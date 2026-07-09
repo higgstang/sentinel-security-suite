@@ -28,12 +28,17 @@ def get_local_subnet():
 
 def ping_host(ip, timeout=1):
     """Return True if host responds to ping, else False."""
+    import platform as _platform
     try:
+        if _platform.system() == "Windows":
+            cmd = ["ping", "-n", "1", "-w", str(timeout * 1000), str(ip)]
+        else:
+            cmd = ["ping", "-c", "1", "-W", str(timeout), str(ip)]
         result = subprocess.run(
-            ["ping", "-c", "1", "-W", str(timeout), str(ip)],
+            cmd,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
-            timeout=timeout + 1,
+            timeout=timeout + 2,
         )
         return result.returncode == 0
     except Exception:
