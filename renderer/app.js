@@ -1774,6 +1774,16 @@ async function _initAll() {
     setupDropZone();
     lucide.createIcons();
 
+    // Populate real app version everywhere
+    if (window.electronAPI && window.electronAPI.getAppVersion) {
+        window.electronAPI.getAppVersion().then(v => {
+            const aboutVer = document.getElementById('about-version');
+            if (aboutVer) aboutVer.textContent = `v${v}`;
+            const loaderVer = document.getElementById('loader-version');
+            if (loaderVer) loaderVer.textContent = `v${v} beta`;
+        });
+    }
+
     // Wire up auto-updater notifications → bell dropdown
     if (window.electronAPI) {
         if (window.electronAPI.onUpdateAvailable)
