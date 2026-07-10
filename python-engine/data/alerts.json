@@ -1,5 +1,37 @@
 [
   {
+    "id": 1783641693190,
+    "type": "malware",
+    "message": "Real-time detection: Hex-encoded payload in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/expl_outlook_cve_2023_23397.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/expl_outlook_cve_2023_23397.yar",
+      "threat_type": "suspicious_content",
+      "description": "Hex-encoded payload",
+      "severity": "medium",
+      "timestamp": "2026-07-10T00:01:33.179779Z",
+      "file_size": 5296,
+      "file_hash": "bc620241101a6d06b4a79dbb344ef9af4e55d0bdcbf4cf289675782ff6f2540b"
+    },
+    "timestamp": "2026-07-10T00:01:33.190181Z",
+    "read": false
+  },
+  {
+    "id": 1783641514085,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_bluetermite_emdivi.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_bluetermite_emdivi.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-09T23:58:34.082278Z",
+      "file_size": 5547,
+      "file_hash": "71e9b60903c6e6d3702b9d008e27342885571ee0a881af048b0108b7483b6c87"
+    },
+    "timestamp": "2026-07-09T23:58:34.085265Z",
+    "read": false
+  },
+  {
     "id": 1783641395567,
     "type": "malware",
     "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/expl_cleo_dec24.yar",

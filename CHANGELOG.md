@@ -6,6 +6,7 @@
 Initial private beta release.
 
 ### Features
+- **Update alerts in bell dropdown** — when a new version is available or downloaded, it appears as a notification in the top-right bell with a toast message; installs automatically on next quit
 - Real-time file system protection with YARA rules
 - ClamAV virus scanning — fully bundled, no install required
 - Network device monitoring and subnet scanning
