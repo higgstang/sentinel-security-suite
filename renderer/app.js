@@ -1655,31 +1655,83 @@ function installUpdateNow() {
     }
 }
 
+// ── In-app update panel controller ───────────────────────────────────────────
+const _updatePanel = {
+    show(title, version) {
+        const p = document.getElementById('update-panel');
+        if (!p) return;
+        document.getElementById('update-panel-title').textContent = title;
+        document.getElementById('update-panel-version').textContent = version ? `Version ${version}` : '';
+        p.style.display = 'block';
+    },
+    setProgress(progress) {
+        const wrap = document.getElementById('update-panel-progress-wrap');
+        if (wrap) wrap.style.display = 'block';
+        const pct = Math.round(progress.percent || 0);
+        const bar = document.getElementById('update-panel-bar');
+        const pctEl = document.getElementById('update-panel-pct');
+        const speedEl = document.getElementById('update-panel-speed');
+        const etaEl = document.getElementById('update-panel-eta');
+        if (bar) bar.style.width = pct + '%';
+        if (pctEl) pctEl.textContent = pct + '%';
+        if (speedEl && progress.bytesPerSecond) {
+            const mbps = (progress.bytesPerSecond / 1024 / 1024).toFixed(1);
+            speedEl.textContent = mbps + ' MB/s';
+        }
+        if (etaEl && progress.total && progress.transferred) {
+            const remaining = progress.total - progress.transferred;
+            const secs = Math.round(remaining / (progress.bytesPerSecond || 1));
+            etaEl.textContent = secs > 0 ? `~${secs}s remaining` : 'almost done…';
+        }
+        document.getElementById('update-panel-title').textContent = 'Downloading Update…';
+    },
+    setReady(version) {
+        document.getElementById('update-panel-title').textContent = 'Update Ready';
+        document.getElementById('update-panel-version').textContent = version ? `Version ${version} downloaded` : 'Downloaded';
+        const bar = document.getElementById('update-panel-bar');
+        if (bar) { bar.style.width = '100%'; bar.style.background = '#22c55e'; bar.style.animation = 'none'; }
+        const pctEl = document.getElementById('update-panel-pct');
+        if (pctEl) pctEl.textContent = '100%';
+        const statusEl = document.getElementById('update-panel-status');
+        if (statusEl) { statusEl.textContent = 'Complete'; statusEl.style.color = '#22c55e'; }
+        const etaEl = document.getElementById('update-panel-eta');
+        if (etaEl) etaEl.textContent = '';
+        const btn = document.getElementById('update-panel-install-btn');
+        if (btn) btn.style.display = 'flex';
+    },
+    setError(msg) {
+        document.getElementById('update-panel-title').textContent = 'Update Failed';
+        document.getElementById('update-panel-version').textContent = msg || 'Check your connection and try again.';
+    },
+};
+
 function _injectUpdateAlert(info, downloaded) {
     const version = (info && info.version) ? `v${info.version}` : 'a new version';
+    // Show the floating panel
+    if (downloaded) {
+        _updatePanel.setReady(version);
+    } else {
+        _updatePanel.show('Update Available', version);
+    }
+    // Also add to bell dropdown
     const alert = {
         id: 'update-' + Date.now(),
         source: 'update',
         severity: 'low',
         label: downloaded ? `Update ready: ${version}` : `Update available: ${version}`,
         message: downloaded
-            ? 'Downloaded and ready to install. The update will be applied when you quit Sentinel.'
-            : 'A new version is downloading in the background.',
+            ? 'Downloaded. Click "Install & Restart" in the bottom-right panel.'
+            : 'Downloading in the background — progress shown in bottom-right.',
         risk: 'None — this is a system update notification.',
         timestamp: new Date().toISOString(),
         read: false,
     };
-    // Prepend to cached alerts so it shows first
     _cachedAlerts = [alert, ..._cachedAlerts.filter(a => a.source !== 'update')];
-    // Update bell badge
     const unread = _cachedAlerts.filter(a => !a.read).length;
     const bellBadge = document.getElementById('bell-badge');
-    if (bellBadge) {
-        bellBadge.textContent = unread;
-        bellBadge.style.display = 'flex';
-    }
+    if (bellBadge) { bellBadge.textContent = unread; bellBadge.style.display = 'flex'; }
     _renderAlertDropdown();
-    _toast(downloaded ? `✓ Update ${version} ready — installs on quit` : `↓ Update ${version} downloading…`, true, 5000);
+    _toast(downloaded ? `✓ Update ${version} ready — click Install & Restart` : `↓ Update ${version} downloading…`, true, 5000);
 }
 
 // Initialize
@@ -1719,8 +1771,12 @@ async function _initAll() {
     if (window.electronAPI) {
         if (window.electronAPI.onUpdateAvailable)
             window.electronAPI.onUpdateAvailable((info) => _injectUpdateAlert(info, false));
+        if (window.electronAPI.onUpdateProgress)
+            window.electronAPI.onUpdateProgress((progress) => { _updatePanel.show('Downloading Update…', ''); _updatePanel.setProgress(progress); });
         if (window.electronAPI.onUpdateDownloaded)
             window.electronAPI.onUpdateDownloaded((info) => _injectUpdateAlert(info, true));
+        if (window.electronAPI.onUpdateError)
+            window.electronAPI.onUpdateError((msg) => _updatePanel.setError(msg));
     }
 
     // All data ready — fade out loader into a fully populated dashboard

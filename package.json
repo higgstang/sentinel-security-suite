@@ -45,7 +45,10 @@
       }
     ],
     "mac": {
-      "target": [{"target": "dmg", "arch": ["arm64"]}, {"target": "pkg", "arch": ["arm64"]}],
+      "target": [
+        {"target": "pkg", "arch": ["arm64"]},
+        {"target": "zip", "arch": ["arm64"]}
+      ],
       "category": "public.app-category.utilities",
       "icon": "assets/icon.png",
       "hardenedRuntime": false,

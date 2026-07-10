@@ -11,6 +11,39 @@
 </head>
 <body>
 
+    <!-- In-app update progress panel -->
+    <div id="update-panel" style="display:none;position:fixed;bottom:24px;right:24px;z-index:99998;width:320px;background:#111114;border:1px solid #27272a;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,0.7);padding:18px 20px;font-family:'Inter',-apple-system,sans-serif;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#ef4444,#991b1b);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div style="flex:1;min-width:0">
+                <div style="font-size:13px;font-weight:700;color:#f4f4f5" id="update-panel-title">Update Available</div>
+                <div style="font-size:11px;color:#71717a" id="update-panel-version"></div>
+            </div>
+            <button onclick="document.getElementById('update-panel').style.display='none'" style="background:none;border:none;color:#52525b;cursor:pointer;padding:2px;line-height:1;font-size:16px">✕</button>
+        </div>
+        <!-- Progress bar (shown during download) -->
+        <div id="update-panel-progress-wrap" style="display:none;margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+                <span style="font-size:11px;color:#a1a1aa" id="update-panel-status">Downloading…</span>
+                <span style="font-size:11px;color:#a1a1aa;font-weight:600" id="update-panel-pct">0%</span>
+            </div>
+            <div style="width:100%;height:4px;background:#1c1c21;border-radius:9999px;overflow:hidden">
+                <div id="update-panel-bar" style="height:100%;width:0%;border-radius:9999px;background:linear-gradient(90deg,#ef4444,#f97316,#ef4444);background-size:200% 100%;animation:progress-shimmer 1.8s ease-in-out infinite;transition:width 0.4s ease;box-shadow:0 0 8px rgba(239,68,68,0.5)"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:5px">
+                <span style="font-size:10px;color:#3f3f46" id="update-panel-speed"></span>
+                <span style="font-size:10px;color:#3f3f46" id="update-panel-eta"></span>
+            </div>
+        </div>
+        <!-- Action buttons -->
+        <div id="update-panel-actions" style="display:flex;gap:8px">
+            <button id="update-panel-install-btn" onclick="installUpdateNow()" style="display:none;flex:1;padding:8px;border-radius:8px;background:#3b82f6;border:none;color:#fff;font-size:12px;font-weight:700;cursor:pointer">⬇ Install & Restart</button>
+            <button onclick="document.getElementById('update-panel').style.display='none'" style="flex:1;padding:8px;border-radius:8px;background:#1c1c21;border:1px solid #27272a;color:#a1a1aa;font-size:12px;cursor:pointer">Later</button>
+        </div>
+    </div>
+
     <!-- Loading screen -->
     <div id="sentinel-loader">
         <div class="loader-logo">
