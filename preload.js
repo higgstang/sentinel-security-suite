@@ -6,4 +6,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
     pickDirectory: () => ipcRenderer.invoke('pick-directory'),
     onUpdateAvailable: (cb) => ipcRenderer.on('update-available', (_e, info) => cb(info)),
     onUpdateDownloaded: (cb) => ipcRenderer.on('update-downloaded', (_e, info) => cb(info)),
+    installUpdateNow: () => ipcRenderer.invoke('install-update-now'),
 });

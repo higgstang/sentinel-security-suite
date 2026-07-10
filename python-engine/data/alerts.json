@@ -1,5 +1,21 @@
 [
   {
+    "id": 1783641947716,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd, suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_stonedrill.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_stonedrill.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd, suspicious_wscript",
+      "severity": "high",
+      "timestamp": "2026-07-10T00:05:47.709887Z",
+      "file_size": 7986,
+      "file_hash": "4cc521dbe75a9c7c4efe8bd25973ad1f09008fab2a4946da3cefd6147774f6f7"
+    },
+    "timestamp": "2026-07-10T00:05:47.716511Z",
+    "read": false
+  },
+  {
     "id": 1783641693190,
     "type": "malware",
     "message": "Real-time detection: Hex-encoded payload in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/expl_outlook_cve_2023_23397.yar",

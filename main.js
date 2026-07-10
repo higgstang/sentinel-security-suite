@@ -199,6 +199,10 @@ async function startPythonEngine(isRestart = false) {
     });
 }
 
+ipcMain.handle('install-update-now', () => {
+    autoUpdater.quitAndInstall(false, true);
+});
+
 ipcMain.handle('get-engine-url', () => {
     return `http://127.0.0.1:${enginePort}`;
 });

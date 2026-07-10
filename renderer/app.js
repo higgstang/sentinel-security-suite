@@ -356,6 +356,7 @@ function _renderAlertDropdown() {
             <div style="font-size:11px;color:#a1a1aa;margin-bottom:3px"><span style="color:#71717a">Risk: </span>${a.risk}</div>
             ${a.path ? `<div style="font-size:10px;color:#52525b;font-family:monospace;word-break:break-all;margin-top:2px">${a.path}</div>` : ''}
             <div style="font-size:10px;color:#3f3f46;margin-top:4px">${ts}</div>
+            ${a.source === 'update' && a.label && a.label.includes('ready') ? `<button onclick="installUpdateNow()" style="margin-top:8px;width:100%;padding:7px 12px;border-radius:8px;background:#3b82f6;border:none;color:#fff;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.01em">⬇ Install & Restart Now</button>` : ''}
         </div>`;
     }).join('');
     if (_cachedAlerts.length > 8) {
@@ -1602,6 +1603,12 @@ async function checkForUpdates() {
         toast.style.display = 'block';
     } catch (e) {
         // silently ignore if admin server not configured
+    }
+}
+
+function installUpdateNow() {
+    if (window.electronAPI && window.electronAPI.installUpdateNow) {
+        window.electronAPI.installUpdateNow();
     }
 }
 
