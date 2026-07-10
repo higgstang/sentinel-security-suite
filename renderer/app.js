@@ -45,7 +45,7 @@ const _loader = {
         // Show version
         try {
             const ver = document.getElementById('loader-version');
-            if (ver) ver.textContent = 'v1.0.2 beta';
+            if (ver) ver.textContent = 'v1.0.3 beta';
         } catch(e) {}
         this.set(5, 'Starting up\u2026');
     },
@@ -410,19 +410,24 @@ function _renderAlertDropdown() {
 async function loadAlerts() {
     try {
         const alerts = await apiGet('/api/alerts');
-        _cachedAlerts = alerts;
+        // Preserve any injected update alerts across refreshes
+        const updateAlerts = _cachedAlerts.filter(a => a.source === 'update');
+        _cachedAlerts = [...updateAlerts, ...alerts];
         const list = document.getElementById('alerts-list');
-        const unread = alerts.filter(a => !a.read).length;
-        const total = alerts.length;
+        const unread = _cachedAlerts.filter(a => !a.read).length;
+        const total = _cachedAlerts.length;
 
-        document.getElementById('dash-threats').textContent = total;
+        const dashThreats = document.getElementById('dash-threats');
+        if (dashThreats) dashThreats.textContent = total;
 
         const badge = document.getElementById('threat-badge');
-        if (unread > 0) {
-            badge.textContent = unread;
-            badge.classList.remove('hidden');
-        } else {
-            badge.classList.add('hidden');
+        if (badge) {
+            if (unread > 0) {
+                badge.textContent = unread;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
         }
 
         // Update bell badge in top bar
@@ -525,11 +530,13 @@ async function loadThreatStatus() {
     try {
         const data = await apiGet('/api/threats/status').catch(() => ({ realtime_active: true, quarantine_count: 0 }));
         const badge = document.getElementById('quarantine-badge');
-        if (data.quarantine_count > 0) {
-            badge.textContent = data.quarantine_count;
-            badge.classList.remove('hidden');
-        } else {
-            badge.classList.add('hidden');
+        if (badge) {
+            if (data.quarantine_count > 0) {
+                badge.textContent = data.quarantine_count;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
         }
 
         const clamavEl = document.getElementById('clamav-status');
