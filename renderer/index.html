@@ -7,8 +7,35 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="loading.css">
 </head>
 <body>
+
+    <!-- Loading screen -->
+    <div id="sentinel-loader">
+        <div class="loader-logo">
+            <div class="loader-ring"></div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+        </div>
+        <div class="loader-title">Sentinel</div>
+        <div class="loader-subtitle">Security Suite</div>
+        <div class="loader-progress-wrap">
+            <div class="loader-progress-track">
+                <div class="loader-progress-fill" id="loader-bar"></div>
+            </div>
+        </div>
+        <div class="loader-status" id="loader-status">Initializing engine…</div>
+        <div class="loader-dots">
+            <div class="loader-dot" id="ldot-0"></div>
+            <div class="loader-dot" id="ldot-1"></div>
+            <div class="loader-dot" id="ldot-2"></div>
+            <div class="loader-dot" id="ldot-3"></div>
+        </div>
+        <div class="loader-version" id="loader-version"></div>
+    </div>
+
     <div class="app-layout">
         <!-- Sidebar -->
         <aside class="sidebar">

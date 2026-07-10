@@ -1,5 +1,57 @@
 let engineUrl = '';
 
+// ── Loading screen controller ─────────────────────────────────────────────────
+const _loader = {
+    steps: [
+        { pct: 15, label: 'Initializing engine\u2026' },
+        { pct: 35, label: 'Loading threat intelligence\u2026' },
+        { pct: 55, label: 'Starting real-time protection\u2026' },
+        { pct: 75, label: 'Connecting to security services\u2026' },
+        { pct: 90, label: 'Loading interface\u2026' },
+        { pct: 100, label: 'Ready' },
+    ],
+    _cur: 0,
+    set(pct, label) {
+        const bar = document.getElementById('loader-bar');
+        const status = document.getElementById('loader-status');
+        if (bar) bar.style.width = pct + '%';
+        if (status) {
+            status.textContent = label;
+            if (pct === 100) status.classList.add('ready');
+        }
+        // activate dots 0-3 as pct crosses 25/50/75/100
+        [0,1,2,3].forEach(i => {
+            const dot = document.getElementById('ldot-' + i);
+            if (!dot) return;
+            const threshold = (i + 1) * 25;
+            if (pct >= 100) { dot.className = 'loader-dot done'; }
+            else if (pct >= threshold) { dot.className = 'loader-dot done'; }
+            else if (pct >= threshold - 24) { dot.className = 'loader-dot active'; }
+            else { dot.className = 'loader-dot'; }
+        });
+    },
+    step(n) {
+        const s = this.steps[Math.min(n, this.steps.length - 1)];
+        this.set(s.pct, s.label);
+    },
+    hide() {
+        this.set(100, 'Ready');
+        setTimeout(() => {
+            const el = document.getElementById('sentinel-loader');
+            if (el) el.classList.add('fade-out');
+        }, 600);
+    },
+    init() {
+        // Show version
+        try {
+            const ver = document.getElementById('loader-version');
+            if (ver) ver.textContent = 'v1.0.0 beta';
+        } catch(e) {}
+        this.set(5, 'Starting up\u2026');
+    },
+};
+_loader.init();
+
 // ── Non-blocking notification helpers ────────────────────────────────────────
 function _toast(msg, ok = true, duration = 3500) {
     const el = document.createElement('div');
@@ -51,6 +103,7 @@ const _SEVERITY_BADGE_STYLE = {
 };
 
 async function initEngine() {
+    _loader.step(0);
     if (window.electronAPI) {
         engineUrl = await window.electronAPI.getEngineUrl();
     } else {
@@ -65,6 +118,7 @@ async function initEngine() {
     // Auto-start real-time protection on launch
     apiPost('/api/threats/realtime/start').then(() => loadThreatStatus()).catch(() => loadThreatStatus());
     setInterval(loadThreatStatus, 15000);
+    _loader.step(2);
     loadBetaConfig();
     setInterval(checkForUpdates, 120000);
     setFeedbackType('bug');
@@ -1642,11 +1696,13 @@ function _injectUpdateAlert(info, downloaded) {
 // Initialize
 async function _initAll() {
     await initEngine();
+    _loader.step(1);
     await Promise.all([loadAlerts(), loadThreatStatus()]);
-    // loadAlerts and loadThreatStatus already set up in initEngine — avoid duplicating intervals
+    _loader.step(3);
     setInterval(loadSystem, 10000);
     loadIntelStatus();
     setInterval(loadIntelStatus, 60000);
+    _loader.step(4);
     loadLicense();
     setInterval(loadLicense, 60000);
     loadIgnoreList();
@@ -1660,5 +1716,7 @@ async function _initAll() {
         if (window.electronAPI.onUpdateDownloaded)
             window.electronAPI.onUpdateDownloaded((info) => _injectUpdateAlert(info, true));
     }
+
+    _loader.hide();
 }
 _initAll();

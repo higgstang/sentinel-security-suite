@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+#sentinel-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: #0b0b0c;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+#sentinel-loader.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Shield logo */
+.loader-logo {
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #ef4444 0%, #991b1b 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 28px;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    animation: shield-pulse 2.4s ease-in-out infinite;
+    position: relative;
+}
+
+.loader-logo svg {
+    width: 36px;
+    height: 36px;
+    color: #fff;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+}
+
+@keyframes shield-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.45), 0 8px 32px rgba(239,68,68,0.25); }
+    50%       { box-shadow: 0 0 0 14px rgba(239,68,68,0), 0 8px 40px rgba(239,68,68,0.35); }
+}
+
+/* Rotating ring around logo */
+.loader-ring {
+    position: absolute;
+    inset: -10px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: rgba(239, 68, 68, 0.7);
+    border-right-color: rgba(239, 68, 68, 0.2);
+    animation: ring-spin 1.4s linear infinite;
+}
+
+@keyframes ring-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Title */
+.loader-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #f4f4f5;
+    letter-spacing: -0.03em;
+    margin-bottom: 4px;
+}
+
+.loader-subtitle {
+    font-size: 12px;
+    font-weight: 500;
+    color: #52525b;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+}
+
+/* Progress bar */
+.loader-progress-wrap {
+    width: 280px;
+    margin-bottom: 14px;
+}
+
+.loader-progress-track {
+    width: 100%;
+    height: 3px;
+    background: #1c1c21;
+    border-radius: 9999px;
+    overflow: hidden;
+    position: relative;
+}
+
+.loader-progress-fill {
+    height: 100%;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, #ef4444, #f97316, #ef4444);
+    background-size: 200% 100%;
+    animation: progress-shimmer 1.8s ease-in-out infinite;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+    box-shadow: 0 0 8px rgba(239,68,68,0.6);
+}
+
+@keyframes progress-shimmer {
+    0%   { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+}
+
+/* Status text */
+.loader-status {
+    font-size: 11px;
+    color: #3f3f46;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    min-height: 16px;
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+.loader-status.ready {
+    color: #22c55e;
+}
+
+/* Dot indicators */
+.loader-dots {
+    display: flex;
+    gap: 6px;
+    margin-top: 36px;
+}
+
+.loader-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 9999px;
+    background: #27272a;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.loader-dot.active {
+    background: #ef4444;
+    transform: scale(1.4);
+}
+
+.loader-dot.done {
+    background: #22c55e;
+    transform: scale(1);
+}
+
+/* Version badge */
+.loader-version {
+    position: absolute;
+    bottom: 24px;
+    font-size: 10px;
+    color: #27272a;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+}

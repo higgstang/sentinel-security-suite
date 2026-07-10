@@ -1,5 +1,69 @@
 [
   {
+    "id": 1783642640802,
+    "type": "malware",
+    "message": "Real-time detection: Process memory allocation in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_excel_xll_addin_suspicious.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_excel_xll_addin_suspicious.yar",
+      "threat_type": "suspicious_content",
+      "description": "Process memory allocation",
+      "severity": "medium",
+      "timestamp": "2026-07-10T00:17:20.793925Z",
+      "file_size": 3473,
+      "file_hash": "b23d78c3b7ce6a7f90796b0e0761893e8933823d6a7b7308a724e2cbc76f2079"
+    },
+    "timestamp": "2026-07-10T00:17:20.802310Z",
+    "read": false
+  },
+  {
+    "id": 1783642544916,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_cmd in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/expl_cleo_dec24.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/expl_cleo_dec24.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_cmd",
+      "severity": "high",
+      "timestamp": "2026-07-10T00:15:44.913671Z",
+      "file_size": 10688,
+      "file_hash": "8b65f821f1a6b875632ee838f461dfbf01faa16d8f4a66b7a52dd7d0b690e1a0"
+    },
+    "timestamp": "2026-07-10T00:15:44.916068Z",
+    "read": false
+  },
+  {
+    "id": 1783642361680,
+    "type": "malware",
+    "message": "Real-time detection: YARA match: suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_minidionis.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_minidionis.yar",
+      "threat_type": "yara",
+      "description": "YARA match: suspicious_wscript",
+      "severity": "high",
+      "timestamp": "2026-07-10T00:12:41.677246Z",
+      "file_size": 3868,
+      "file_hash": "83dd5e74432051abcc94a40d857fce8988758b5b9cb9c39e8e35fccb58a222f1"
+    },
+    "timestamp": "2026-07-10T00:12:41.680083Z",
+    "read": false
+  },
+  {
+    "id": 1783642358349,
+    "type": "malware",
+    "message": "Real-time detection: Process memory allocation in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/threat_compromised_daemon_tools_lite_may26.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/threat_compromised_daemon_tools_lite_may26.yar",
+      "threat_type": "suspicious_content",
+      "description": "Process memory allocation",
+      "severity": "medium",
+      "timestamp": "2026-07-10T00:12:38.329130Z",
+      "file_size": 4453,
+      "file_hash": "e93b43f3fcfa144e9a327d33aefd405d80c93c378e5440fd42c813a9a58f683a"
+    },
+    "timestamp": "2026-07-10T00:12:38.351018Z",
+    "read": false
+  },
+  {
     "id": 1783641947716,
     "type": "malware",
     "message": "Real-time detection: YARA match: suspicious_cmd, suspicious_wscript in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/apt_stonedrill.yar",
