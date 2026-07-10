@@ -103,24 +103,13 @@ const _SEVERITY_BADGE_STYLE = {
 };
 
 async function initEngine() {
-    _loader.step(0);
+    _loader.step(0); // Initializing engine
     if (window.electronAPI) {
         engineUrl = await window.electronAPI.getEngineUrl();
     } else {
         engineUrl = 'http://127.0.0.1:18081';
     }
     console.log('Engine URL:', engineUrl);
-    loadSystem();
-    loadSubnet();
-    loadDevices();
-    loadAlerts();
-    setInterval(loadAlerts, 10000);
-    // Auto-start real-time protection on launch
-    apiPost('/api/threats/realtime/start').then(() => loadThreatStatus()).catch(() => loadThreatStatus());
-    setInterval(loadThreatStatus, 15000);
-    _loader.step(2);
-    loadBetaConfig();
-    setInterval(checkForUpdates, 120000);
     setFeedbackType('bug');
 }
 
@@ -1695,17 +1684,34 @@ function _injectUpdateAlert(info, downloaded) {
 
 // Initialize
 async function _initAll() {
+    // Step 0: connect to engine
     await initEngine();
+
+    // Step 1: load threat intelligence + alerts
     _loader.step(1);
-    await Promise.all([loadAlerts(), loadThreatStatus()]);
+    await Promise.all([loadAlerts(), loadIntelStatus()]);
+
+    // Step 2: start real-time protection + load threat status
+    _loader.step(2);
+    await apiPost('/api/threats/realtime/start').catch(() => {});
+    await loadThreatStatus();
+
+    // Step 3: load system + network data
     _loader.step(3);
-    setInterval(loadSystem, 10000);
-    loadIntelStatus();
-    setInterval(loadIntelStatus, 60000);
+    await Promise.all([loadSystem(), loadSubnet(), loadDevices()]);
+
+    // Step 4: load remaining interface data
     _loader.step(4);
-    loadLicense();
+    await Promise.all([loadLicense(), loadBetaConfig(), loadIgnoreList()]);
+
+    // Set up refresh intervals now that initial data is loaded
+    setInterval(loadAlerts, 10000);
+    setInterval(loadThreatStatus, 15000);
+    setInterval(loadSystem, 10000);
+    setInterval(loadIntelStatus, 60000);
     setInterval(loadLicense, 60000);
-    loadIgnoreList();
+    setInterval(checkForUpdates, 120000);
+
     setupDropZone();
     lucide.createIcons();
 
@@ -1717,6 +1723,7 @@ async function _initAll() {
             window.electronAPI.onUpdateDownloaded((info) => _injectUpdateAlert(info, true));
     }
 
+    // All data ready — fade out loader into a fully populated dashboard
     _loader.hide();
 }
 _initAll();
