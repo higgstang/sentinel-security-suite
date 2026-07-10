@@ -1,5 +1,37 @@
 [
   {
+    "id": 1783642882427,
+    "type": "malware",
+    "message": "Real-time detection: Hex-encoded payload in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/expl_outlook_cve_2023_23397.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/expl_outlook_cve_2023_23397.yar",
+      "threat_type": "suspicious_content",
+      "description": "Hex-encoded payload",
+      "severity": "medium",
+      "timestamp": "2026-07-10T00:21:22.399848Z",
+      "file_size": 5296,
+      "file_hash": "bc620241101a6d06b4a79dbb344ef9af4e55d0bdcbf4cf289675782ff6f2540b"
+    },
+    "timestamp": "2026-07-10T00:21:22.427910Z",
+    "read": false
+  },
+  {
+    "id": 1783642881449,
+    "type": "malware",
+    "message": "Real-time detection: Process memory writing in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_powershell_toolkit.yar",
+    "device": {
+      "path": "/Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_powershell_toolkit.yar",
+      "threat_type": "suspicious_content",
+      "description": "Process memory writing",
+      "severity": "medium",
+      "timestamp": "2026-07-10T00:21:21.423004Z",
+      "file_size": 12681,
+      "file_hash": "02e21c178948b59a33b29c0c892fb5ecf5125226a20219b33f919a99922ac487"
+    },
+    "timestamp": "2026-07-10T00:21:21.450376Z",
+    "read": false
+  },
+  {
     "id": 1783642640802,
     "type": "malware",
     "message": "Real-time detection: Process memory allocation in /Users/higgs/CascadeProjects/security-suite/python-engine/yara_rules/gen_excel_xll_addin_suspicious.yar",

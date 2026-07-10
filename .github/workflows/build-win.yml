@@ -99,6 +99,7 @@ jobs:
           path: |
             release/*.dmg
             release/*.pkg
+            release/*.yml
           retention-days: 30
 
   build-windows:
@@ -178,5 +179,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Sentinel-Windows-Installer
-          path: release/*.exe
+          path: |
+            release/*.exe
+            release/*.yml
           retention-days: 30

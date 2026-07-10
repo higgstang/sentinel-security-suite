@@ -1,6 +1,6 @@
 {
   "name": "sentinel-security-suite",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Standalone network security suite",
   "main": "main.js",
   "scripts": {
