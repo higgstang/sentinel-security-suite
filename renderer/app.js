@@ -45,7 +45,7 @@ const _loader = {
         // Show version
         try {
             const ver = document.getElementById('loader-version');
-            if (ver) ver.textContent = 'v1.0.1 beta';
+            if (ver) ver.textContent = 'v1.0.2 beta';
         } catch(e) {}
         this.set(5, 'Starting up\u2026');
     },

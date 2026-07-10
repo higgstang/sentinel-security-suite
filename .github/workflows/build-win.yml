@@ -97,8 +97,8 @@ jobs:
         with:
           name: Sentinel-Mac-Installer
           path: |
-            release/*.dmg
             release/*.pkg
+            release/*.zip
             release/*.yml
           retention-days: 30
 
