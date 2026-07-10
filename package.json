@@ -1,6 +1,6 @@
 {
   "name": "sentinel-security-suite",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Standalone network security suite",
   "main": "main.js",
   "scripts": {
@@ -52,7 +52,8 @@
       "category": "public.app-category.utilities",
       "icon": "assets/icon.png",
       "hardenedRuntime": false,
-      "gatekeeperAssess": false
+      "gatekeeperAssess": false,
+      "artifactName": "Sentinel-Security-Suite-${version}-${arch}-mac.${ext}"
     },
     "pkg": {
       "installLocation": "/Applications",
